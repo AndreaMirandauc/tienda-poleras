@@ -599,9 +599,85 @@ th {
   width: 1px;
 }
 
+
+.pants-product {
+  background: #efe8dc;
+  display: grid;
+  grid-template-columns: minmax(400px, 0.92fr) minmax(0, 1.08fr);
+  min-height: 720px;
+}
+
+.pants-info {
+  align-self: center;
+  margin: auto;
+  max-width: 620px;
+  padding: 5rem 7vw;
+  width: 100%;
+}
+
+.pants-info h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(3.7rem, 6vw, 6.8rem);
+  letter-spacing: -0.07em;
+  line-height: 0.82;
+  margin: 0 0 2rem;
+}
+
+.pants-info h2 em {
+  color: var(--orange);
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+
+.pants-visual {
+  align-items: center;
+  background: #ddd1bf;
+  display: flex;
+  justify-content: center;
+  min-height: 680px;
+  overflow: hidden;
+  padding: 4rem;
+  position: relative;
+}
+
+.pants {
+  filter: drop-shadow(0 24px 30px rgba(30, 25, 20, 0.1));
+  max-height: 570px;
+  position: relative;
+  transform: rotate(2deg);
+  width: min(68%, 420px);
+  z-index: 3;
+}
+
+.pants-shape {
+  background: var(--orange);
+  border-radius: 50%;
+  height: 300px;
+  position: absolute;
+  right: 9%;
+  top: 18%;
+  width: 300px;
+}
+
+.pants-tag {
+  transform: rotate(-7deg);
+}
+
 @media (max-width: 920px) {
-  .hero {
+  .hero,
+  .pants-product {
     grid-template-columns: 1fr;
+  }
+
+  .pants-info {
+    max-width: 700px;
+    order: 2;
+    padding: 5rem 8vw;
+  }
+
+  .pants-visual {
+    min-height: 590px;
+    order: 1;
   }
 
   .product-visual {
@@ -639,9 +715,28 @@ th {
     padding: 0.6rem 0.9rem;
   }
 
-  .product-visual {
+  .product-visual,
+  .pants-visual {
     min-height: 490px;
     padding: 3.5rem 1rem 2rem;
+  }
+
+  .pants-info {
+    padding: 4rem 6vw;
+  }
+
+  .pants-info h2 {
+    font-size: clamp(3.6rem, 18vw, 5rem);
+  }
+
+  .pants {
+    width: 82%;
+  }
+
+  .pants-shape {
+    height: 210px;
+    right: -6%;
+    width: 210px;
   }
 
   .shirt {
