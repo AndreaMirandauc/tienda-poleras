@@ -435,6 +435,59 @@ legend strong {
   margin: 0.8rem 0 0;
 }
 
+
+.catalog-section {
+  align-items: center;
+  background: var(--orange);
+  color: var(--ink);
+  display: flex;
+  gap: 3rem;
+  justify-content: space-between;
+  padding: 4.5rem 8vw;
+}
+
+.catalog-section h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  letter-spacing: -0.055em;
+  margin: 0 0 1rem;
+}
+
+.catalog-section p {
+  line-height: 1.7;
+  margin: 0;
+  max-width: 44rem;
+}
+
+.catalog-section .eyebrow {
+  color: rgba(24, 24, 21, 0.68);
+}
+
+.catalog-update {
+  font-weight: 700;
+  margin-top: 0.7rem !important;
+}
+
+.catalog-button {
+  align-items: center;
+  background: var(--ink);
+  color: #fff;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-weight: 700;
+  gap: 0.7rem;
+  justify-content: center;
+  min-height: 58px;
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.catalog-button:hover {
+  box-shadow: 0 14px 28px rgba(24, 24, 21, 0.22);
+  transform: translateY(-2px);
+}
+
 .benefits {
   background: var(--ink);
   color: #fff;
@@ -703,6 +756,17 @@ th {
 }
 
 @media (max-width: 620px) {
+  .catalog-section {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 3.5rem 7vw;
+  }
+
+  .catalog-button {
+    width: 100%;
+  }
+
   .site-header {
     height: 68px;
   }
