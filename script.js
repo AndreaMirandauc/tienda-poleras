@@ -1,6 +1,9 @@
 const WHATSAPP_NUMBER = "56966690359";
 const PRODUCT_NAME = "Polera Essential";
 const UNIT_PRICE = 4000;
+const PANTS_NAME = "Pantalón Urban";
+const PANTS_UNIT_PRICE = 9990;
+const PANTS_STOCK = 10;
 
 const form = document.querySelector("#product-form");
 const quantityOutput = document.querySelector("#quantity");
@@ -16,6 +19,13 @@ const openSizeGuide = document.querySelector("#open-size-guide");
 const closeSizeGuide = document.querySelector("#close-size-guide");
 
 let quantity = 1;
+let pantsQuantity = 1;
+
+const pantsForm = document.querySelector("#pants-form");
+const pantsQuantityOutput = document.querySelector("#pants-quantity");
+const pantsDecreaseButton = document.querySelector("#pants-decrease");
+const pantsIncreaseButton = document.querySelector("#pants-increase");
+const pantsWhatsappButton = document.querySelector("#pants-whatsapp-button");
 
 const colorStyles = {
   Negro: { shirt: "#1d1d1a", logo: "#f6f1e9" },
@@ -93,5 +103,42 @@ sizeGuide.addEventListener("click", (event) => {
   }
 });
 
+
+function buildPantsWhatsappUrl() {
+  const data = new FormData(pantsForm);
+  const size = data.get("pants-size");
+  const total = PANTS_UNIT_PRICE * pantsQuantity;
+  const message = [
+    "¡Hola! 👋 Me interesa comprar:",
+    "",
+    `👖 ${PANTS_NAME}`,
+    `📏 Talla: ${size}`,
+    `🔢 Cantidad: ${pantsQuantity}`,
+    `💰 Total: ${formatPrice(total)}`,
+    "",
+    "¿Está disponible? Quisiera coordinar el pago y el despacho.",
+  ].join("\n");
+
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+function updatePantsPurchaseLink() {
+  pantsWhatsappButton.href = buildPantsWhatsappUrl();
+}
+
+function setPantsQuantity(nextQuantity) {
+  pantsQuantity = Math.min(PANTS_STOCK, Math.max(1, nextQuantity));
+  pantsQuantityOutput.value = pantsQuantity;
+  pantsQuantityOutput.textContent = pantsQuantity;
+  pantsDecreaseButton.disabled = pantsQuantity === 1;
+  pantsIncreaseButton.disabled = pantsQuantity === PANTS_STOCK;
+  updatePantsPurchaseLink();
+}
+
+pantsDecreaseButton.addEventListener("click", () => setPantsQuantity(pantsQuantity - 1));
+pantsIncreaseButton.addEventListener("click", () => setPantsQuantity(pantsQuantity + 1));
+pantsForm.addEventListener("change", updatePantsPurchaseLink);
+
 document.querySelector("#year").textContent = new Date().getFullYear();
 setQuantity(1);
+setPantsQuantity(1);
