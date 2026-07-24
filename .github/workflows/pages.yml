@@ -35,4 +35,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-# Reactivación solicitada tras habilitar GitHub Pages.
+# Republicación forzada: 2026-07-24, métodos de pago.
