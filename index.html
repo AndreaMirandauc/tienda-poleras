@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Polera Essential: cómoda, versátil y hecha para todos los días. Compra directamente por WhatsApp."
+    />
+    <meta name="theme-color" content="#f5f0e8" />
+    <title>NOVA — Polera Essential</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="announcement">
+      <p>Despachos en Santiago · Compra fácil por WhatsApp</p>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="NOVA, volver al inicio">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span>NOVA</span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="#producto">Producto</a>
+        <a href="#detalles">Detalles</a>
+        <a class="nav-cta" href="#comprar">Comprar</a>
+      </nav>
+    </header>
+
+    <main id="inicio">
+      <section class="hero" id="producto">
+        <div class="product-visual">
+          <span class="eyebrow visual-label">Nueva colección</span>
+          <div class="shape shape-one" aria-hidden="true"></div>
+          <div class="shape shape-two" aria-hidden="true"></div>
+
+          <svg
+            class="shirt"
+            viewBox="0 0 520 560"
+            role="img"
+            aria-labelledby="shirt-title shirt-description"
+          >
+            <title id="shirt-title">Polera Essential negra</title>
+            <desc id="shirt-description">
+              Polera de manga corta con cuello redondo y diseño minimalista.
+            </desc>
+            <defs>
+              <linearGradient id="shirtShade" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#2d2d2a" />
+                <stop offset="100%" stop-color="#11110f" />
+              </linearGradient>
+              <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+                <feDropShadow dx="0" dy="20" stdDeviation="18" flood-opacity=".2" />
+              </filter>
+            </defs>
+            <path
+              class="shirt-body"
+              filter="url(#shadow)"
+              fill="url(#shirtShade)"
+              d="M181 77c18 24 45 37 79 37s61-13 79-37l95 53c15 8 21 26 14 41l-43 92-57-25v248c0 11-9 20-20 20H192c-11 0-20-9-20-20V238l-57 25-43-92c-7-15-1-33 14-41l95-53Z"
+            />
+            <path
+              fill="none"
+              stroke="#f6f1e9"
+              stroke-opacity=".15"
+              stroke-width="7"
+              d="M181 77c15 47 113 53 158 0"
+            />
+            <path
+              fill="none"
+              stroke="#fff"
+              stroke-opacity=".11"
+              stroke-width="4"
+              d="M172 237v249m176-249v249"
+            />
+            <g class="shirt-logo" fill="#f6f1e9">
+              <path d="M228 276h13l38 54v-54h14v80h-13l-38-54v54h-14v-80Z" />
+            </g>
+          </svg>
+
+          <div class="floating-tag">
+            <span>100%</span>
+            <small>algodón</small>
+          </div>
+        </div>
+
+        <div class="product-info" id="comprar">
+          <p class="eyebrow">Esencial de temporada</p>
+          <h1>Polera<br /><em>Essential</em></h1>
+          <p class="product-description">
+            Suave, cómoda y fácil de combinar. Una polera de calce relajado que
+            funciona todos los días.
+          </p>
+
+          <div class="price-row">
+            <p class="price">$4.000 <span>CLP</span></p>
+            <span class="stock"><i aria-hidden="true"></i> Disponible</span>
+          </div>
+
+          <form id="product-form">
+            <fieldset>
+              <legend>
+                Color <strong id="selected-color">Negro</strong>
+              </legend>
+              <div class="color-options">
+                <label class="color-option">
+                  <input type="radio" name="color" value="Negro" checked />
+                  <span class="swatch swatch-black" title="Negro"></span>
+                  <span class="sr-only">Negro</span>
+                </label>
+                <label class="color-option">
+                  <input type="radio" name="color" value="Blanco" />
+                  <span class="swatch swatch-white" title="Blanco"></span>
+                  <span class="sr-only">Blanco</span>
+                </label>
+                <label class="color-option">
+                  <input type="radio" name="color" value="Beige" />
+                  <span class="swatch swatch-beige" title="Beige"></span>
+                  <span class="sr-only">Beige</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <div class="legend-row">
+                <legend>Talla</legend>
+                <button class="size-guide-button" type="button" id="open-size-guide">
+                  Guía de tallas
+                </button>
+              </div>
+              <div class="size-options">
+                <label>
+                  <input type="radio" name="size" value="S" />
+                  <span>S</span>
+                </label>
+                <label>
+                  <input type="radio" name="size" value="M" checked />
+                  <span>M</span>
+                </label>
+                <label>
+                  <input type="radio" name="size" value="L" />
+                  <span>L</span>
+                </label>
+                <label>
+                  <input type="radio" name="size" value="XL" />
+                  <span>XL</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="purchase-row">
+              <div class="quantity">
+                <button type="button" id="decrease" aria-label="Disminuir cantidad">−</button>
+                <output id="quantity" aria-live="polite">1</output>
+                <button type="button" id="increase" aria-label="Aumentar cantidad">+</button>
+              </div>
+              <a
+                class="whatsapp-button"
+                id="whatsapp-button"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                  <path
+                    d="M16.04 3a12.76 12.76 0 0 0-10.9 19.4L3.34 29l6.76-1.77A12.77 12.77 0 1 0 16.04 3Zm0 23.37c-2.1 0-4.15-.56-5.94-1.62l-.42-.25-4 .99 1.06-3.87-.28-.44a10.57 10.57 0 1 1 9.58 5.19Zm5.8-7.9c-.32-.16-1.88-.92-2.17-1.03-.29-.1-.5-.16-.71.16-.21.32-.82 1.03-1 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.88-1.76-2.2-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.18.21-.32.32-.52.1-.21.05-.4-.03-.56-.08-.16-.71-1.72-.98-2.35-.25-.62-.52-.54-.71-.55h-.61c-.21 0-.55.08-.84.4-.29.31-1.11 1.08-1.11 2.64s1.14 3.07 1.29 3.28c.16.21 2.24 3.42 5.42 4.8.76.32 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.38.19-1.51-.08-.13-.29-.21-.61-.37Z"
+                  />
+                </svg>
+                Comprar por WhatsApp
+              </a>
+            </div>
+            <p class="purchase-note">
+              Te abriremos WhatsApp con tu pedido listo para enviar. El pago y
+              despacho se coordinan directamente.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <section class="benefits" aria-label="Beneficios de compra">
+        <article>
+          <span aria-hidden="true">01</span>
+          <div>
+            <h2>Compra directa</h2>
+            <p>Atención personal por WhatsApp.</p>
+          </div>
+        </article>
+        <article>
+          <span aria-hidden="true">02</span>
+          <div>
+            <h2>Despacho rápido</h2>
+            <p>Envíos dentro de Santiago.</p>
+          </div>
+        </article>
+        <article>
+          <span aria-hidden="true">03</span>
+          <div>
+            <h2>Cambios simples</h2>
+            <p>Consulta disponibilidad de talla.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="details" id="detalles">
+        <div>
+          <p class="eyebrow">Hecha para repetir</p>
+          <h2>Tu nueva favorita,<br />sin complicaciones.</h2>
+        </div>
+        <div class="detail-copy">
+          <p>
+            Confeccionada en algodón suave de gramaje medio. Mantiene su forma,
+            se siente agradable sobre la piel y combina con todo.
+          </p>
+          <ul>
+            <li>Calce relajado unisex</li>
+            <li>Cuello redondo reforzado</li>
+            <li>Lavable a máquina</li>
+            <li>Disponible de S a XL</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a class="brand footer-brand" href="#inicio">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span>NOVA</span>
+      </a>
+      <p>© <span id="year"></span> NOVA. Santiago, Chile.</p>
+      <a id="footer-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
+        Hablar por WhatsApp
+      </a>
+    </footer>
+
+    <dialog id="size-guide">
+      <button class="close-dialog" id="close-size-guide" type="button" aria-label="Cerrar">
+        ×
+      </button>
+      <p class="eyebrow">Encuentra tu talla</p>
+      <h2>Guía de tallas</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Talla</th>
+            <th>Pecho</th>
+            <th>Largo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>S</td><td>50 cm</td><td>68 cm</td></tr>
+          <tr><td>M</td><td>53 cm</td><td>71 cm</td></tr>
+          <tr><td>L</td><td>56 cm</td><td>74 cm</td></tr>
+          <tr><td>XL</td><td>59 cm</td><td>77 cm</td></tr>
+        </tbody>
+      </table>
+      <p class="dialog-note">Medidas aproximadas de la prenda en superficie plana.</p>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
