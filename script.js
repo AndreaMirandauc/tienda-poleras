@@ -1,291 +1,214 @@
-const FRAME_COUNT = 8;
-const PHONES = {
-  santiago: "56966690359",
-  regiones: "56961179420",
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+
+const PRICE = 25990;
+const PHONES = { santiago: "56966690359", regiones: "56961179420" };
+
+const MODELS = [
+  { id:"celeste", name:"Cumbre Celeste", design:"Celeste / negro", description:"Chaqueta bicolor celeste y negra, con acolchado térmico y estilo outdoor.", color:"#2b9fd0", light:"#67c7ed", dark:"#14749f", type:"solid" },
+  { id:"negro", name:"Eclipse Negra", design:"Negro total", description:"Modelo completamente negro, sobrio y fácil de combinar para el uso diario.", color:"#22272c", light:"#464d54", dark:"#0f1418", type:"solid" },
+  { id:"rojo", name:"Cumbre Roja", design:"Rojo / negro", description:"Modelo rojo intenso con panel superior negro y acabado acolchado de invierno.", color:"#c62835", light:"#e0525d", dark:"#811922", type:"solid" },
+  { id:"crema", name:"Arena Crema", design:"Crema / negro", description:"Modelo crema cálido con contraste negro, moderno y de apariencia premium.", color:"#caae7f", light:"#e8d2a9", dark:"#967448", type:"solid" },
+  { id:"verde", name:"Bosque Verde", design:"Verde / negro", description:"Chaqueta verde bosque con parte superior negra y estética outdoor clásica.", color:"#2f6758", light:"#5d9887", dark:"#16483b", type:"solid" },
+  { id:"grafito", name:"Cordillera Grafito", design:"Grafito / negro", description:"Modelo gris grafito con contraste negro, discreto y versátil.", color:"#555b62", light:"#7d848c", dark:"#34383e", type:"solid" },
+  { id:"montana", name:"Montaña Bicolor", design:"Estampado blanco y negro", description:"Diseño estampado inspirado en relieves de montaña, con panel superior negro.", color:"#22272c", light:"#eef1f3", dark:"#101419", type:"mountain" },
+  { id:"bosque", name:"Bosque Nevado", design:"Estampado ramas crema", description:"Estampado de ramas invernales en tonos crema, gris y negro.", color:"#c2b49d", light:"#eee4d4", dark:"#3a393b", type:"branches" },
+];
+
+const state = { model: MODELS[0], size:"M", quantity:1, autoRotate:false };
+
+const els = {
+  modelGrid: document.querySelector("#model-grid"),
+  modelOptions: document.querySelector("#model-options"),
+  viewerTitle: document.querySelector("#viewer-model-title"),
+  selectedTitle: document.querySelector("#selected-model-title"),
+  selectedName: document.querySelector("#selected-model-name"),
+  selectedDescription: document.querySelector("#selected-model-description"),
+  selectedSize: document.querySelector("#selected-size-name"),
+  quantity: document.querySelector("#quantity"),
+  viewer: document.querySelector("#product-viewer"),
+  viewerHint: document.querySelector("#viewer-hint"),
+  loading: document.querySelector("#loading-state"),
+  autoRotate: document.querySelector("#auto-rotate"),
+  resetView: document.querySelector("#reset-view"),
+  dialog: document.querySelector("#delivery-dialog"),
 };
 
-const COLORS = {
-  celeste: { label: "Celeste", main: "#2c9fd0", light: "#6bc7ed", dark: "#1675a2" },
-  negro: { label: "Negro", main: "#252a2f", light: "#444b52", dark: "#12171b" },
-  rojo: { label: "Rojo", main: "#c32632", light: "#e14a55", dark: "#861821" },
-  crema: { label: "Crema", main: "#c6a878", light: "#e1c89e", dark: "#94764d" },
-};
-
-const state = {
-  color: "celeste",
-  colorLabel: "Celeste",
-  size: "M",
-  quantity: 1,
-  frame: 0,
-  mode: "360",
-  dragging: false,
-  startX: 0,
-  startFrame: 0,
-};
-
-const viewer = document.querySelector("#product-viewer");
-const image = document.querySelector("#product-image");
-const hint = document.querySelector("#viewer-hint");
-const dots = document.querySelector("#frame-dots");
-const angleLabel = document.querySelector("#angle-label");
-const controls = document.querySelector("#viewer-controls");
-const tab360 = document.querySelector("#tab-360");
-const tabHood = document.querySelector("#tab-hood");
-const selectedColorName = document.querySelector("#selected-color-name");
-const selectedSizeName = document.querySelector("#selected-size-name");
-const quantityOutput = document.querySelector("#quantity");
-const dialog = document.querySelector("#delivery-dialog");
-
-function brandMarkup(opacity = 1) {
-  return `
-    <g opacity="${opacity}" transform="translate(416 242)">
-      <text x="0" y="0" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="800">THE</text>
-      <text x="0" y="14" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="800">NORTH</text>
-      <text x="0" y="28" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="800">FACE</text>
-      <path d="M52 28a28 28 0 0 0-28-28v8a20 20 0 0 1 20 20Z" fill="#fff"/>
-      <path d="M42 28A18 18 0 0 0 24 10v7a11 11 0 0 1 11 11Z" fill="#fff" opacity=".92"/>
-    </g>`;
+function formatPrice(value){
+  return new Intl.NumberFormat("es-CL",{style:"currency",currency:"CLP",maximumFractionDigits:0}).format(value);
 }
 
-function defsMarkup(c) {
-  return `
-    <defs>
-      <linearGradient id="body" x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0" stop-color="${c.light}"/>
-        <stop offset=".48" stop-color="${c.main}"/>
-        <stop offset="1" stop-color="${c.dark}"/>
-      </linearGradient>
-      <linearGradient id="black" x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0" stop-color="#343a40"/>
-        <stop offset="1" stop-color="#11161b"/>
-      </linearGradient>
-      <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
-        <feDropShadow dx="0" dy="24" stdDeviation="18" flood-color="#0b1c2b" flood-opacity=".24"/>
-      </filter>
-      <filter id="soft"><feGaussianBlur stdDeviation="8"/></filter>
-      <pattern id="fabric" width="12" height="12" patternUnits="userSpaceOnUse">
-        <path d="M0 12 12 0M-4 4 4-4M8 16 16 8" stroke="#fff" stroke-opacity=".035" stroke-width="1"/>
-      </pattern>
-    </defs>`;
-}
-
-function mountainBackdrop() {
-  return `
-    <path d="M0 565 110 410l78 90 115-190 92 135 96-165 229 285Z" fill="#b9d8e8" opacity=".42"/>
-    <path d="M0 620 120 500l96 70 135-170 110 115 104-128 155 233Z" fill="#6e9bb4" opacity=".28"/>
-    <ellipse cx="360" cy="615" rx="225" ry="30" fill="#50697a" opacity=".18" filter="url(#soft)"/>`;
-}
-
-function frontJacket(c, detached = false) {
-  const shift = detached ? -72 : 0;
-  const scale = detached ? .87 : 1;
-  const hood = detached ? "" : `
-    <path d="M278 190c8-73 42-111 82-111s74 38 82 111l-37 22c-11-45-25-66-45-66s-34 21-45 66Z" fill="url(#black)" stroke="#0a1117" stroke-width="3"/>
-    <path d="M304 187c10-39 28-59 56-59s46 20 56 59" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="5"/>`;
-  return `
-    <g transform="translate(${shift} 0) scale(${scale})" transform-origin="360px 350px" filter="url(#shadow)">
-      ${hood}
-      <path d="M260 178c30-17 65-26 100-26s70 9 100 26l70 50-48 104-52-35v278c0 18-14 32-32 32H322c-18 0-32-14-32-32V297l-52 35-48-104Z" fill="url(#body)" stroke="${c.dark}" stroke-width="3"/>
-      <path d="M260 178c30-17 65-26 100-26s70 9 100 26l37 27-23 89H246l-23-89Z" fill="url(#black)"/>
-      <path d="M360 154v452" stroke="#0a1117" stroke-width="8"/>
-      <path d="M364 160v440" stroke="#fff" stroke-opacity=".12" stroke-width="2"/>
-      <path d="M274 300h172M286 382h148M290 469h140" stroke="#101820" stroke-opacity=".24" stroke-width="3"/>
-      <path d="M295 435 326 413v89l-31 18Zm130 0-31-22v89l31 18Z" fill="none" stroke="#111820" stroke-opacity=".62" stroke-width="4"/>
-      <path d="M260 178c30-17 65-26 100-26s70 9 100 26l70 50-48 104-52-35v278c0 18-14 32-32 32H322c-18 0-32-14-32-32V297l-52 35-48-104Z" fill="url(#fabric)"/>
-      ${brandMarkup()}
-    </g>`;
-}
-
-function detachedHoodMarkup(c) {
-  return `
-    <g transform="translate(520 105) rotate(8)" filter="url(#shadow)">
-      <path d="M0 75c12-63 42-91 83-91 45 0 78 35 91 100l-18 102c-52 16-101 10-142-17Z" fill="url(#body)" stroke="${c.dark}" stroke-width="3"/>
-      <path d="M24 73c15-37 36-54 63-54 29 0 51 20 65 60l-11 70c-39 8-76 4-108-13Z" fill="url(#black)"/>
-      <circle cx="19" cy="166" r="6" fill="#111820"/><circle cx="145" cy="179" r="6" fill="#111820"/>
-      <path d="M20 164h-20m146 15h23" stroke="#111820" stroke-width="4"/>
-      <path d="M0 75c12-63 42-91 83-91 45 0 78 35 91 100l-18 102c-52 16-101 10-142-17Z" fill="url(#fabric)"/>
-    </g>`;
-}
-
-function rotatingJacket(c, frame) {
-  const angle = frame * 45;
-  const rad = angle * Math.PI / 180;
-  const frontFactor = Math.max(0, Math.cos(rad));
-  const backFactor = Math.max(0, -Math.cos(rad));
-  const side = Math.abs(Math.sin(rad));
-  const widthScale = .28 + .72 * Math.abs(Math.cos(rad));
-  const lean = Math.sin(rad) * 28;
-  const sleeveNear = 1 + side * .14;
-  const sleeveFar = 1 - side * .18;
-  const front = frontFactor >= backFactor;
-  const logoOpacity = frontFactor > .2 ? Math.min(1, frontFactor * 1.35) : 0;
-  const zipperOpacity = front ? frontFactor : 0;
-  const backSeamOpacity = front ? 0 : backFactor;
-
-  return `
-    <g filter="url(#shadow)" transform="translate(${lean} 0)">
-      <g transform="translate(360 0) scale(${widthScale} 1) translate(-360 0)">
-        <path d="M278 190c8-73 42-111 82-111s74 38 82 111l-37 22c-11-45-25-66-45-66s-34 21-45 66Z" fill="url(#black)" stroke="#0a1117" stroke-width="3"/>
-        <path d="M260 178c30-17 65-26 100-26s70 9 100 26l70 50-48 104-52-35v278c0 18-14 32-32 32H322c-18 0-32-14-32-32V297l-52 35-48-104Z" fill="url(#body)" stroke="${c.dark}" stroke-width="3"/>
-        <path d="M260 178c30-17 65-26 100-26s70 9 100 26l37 27-23 89H246l-23-89Z" fill="url(#black)"/>
-        <path d="M274 300h172M286 382h148M290 469h140" stroke="#101820" stroke-opacity=".24" stroke-width="3"/>
-        <path d="M360 154v452" stroke="#0a1117" stroke-width="8" opacity="${zipperOpacity}"/>
-        <path d="M360 174v404" stroke="#fff" stroke-opacity="${.18 * backSeamOpacity}" stroke-width="4"/>
-        <g opacity="${zipperOpacity}"><path d="M295 435 326 413v89l-31 18Zm130 0-31-22v89l31 18Z" fill="none" stroke="#111820" stroke-opacity=".62" stroke-width="4"/></g>
-        <path d="M260 178c30-17 65-26 100-26s70 9 100 26l70 50-48 104-52-35v278c0 18-14 32-32 32H322c-18 0-32-14-32-32V297l-52 35-48-104Z" fill="url(#fabric)"/>
-        ${logoOpacity ? brandMarkup(logoOpacity) : ""}
-      </g>
-      <path d="M205 225c-44 40-75 106-82 208l58 15 65-160Z" fill="url(#body)" opacity="${sleeveFar}"/>
-      <path d="M515 225c44 40 75 106 82 208l-58 15-65-160Z" fill="url(#body)" opacity="${sleeveNear}"/>
-    </g>`;
-}
-
-function jacketSvg(frame, colorKey, detached = false) {
-  const c = COLORS[colorKey];
-  const content = detached
-    ? `${frontJacket(c, true)}${detachedHoodMarkup(c)}`
-    : rotatingJacket(c, frame);
-  return `
-    <svg viewBox="0 0 720 720" xmlns="http://www.w3.org/2000/svg" role="presentation">
-      ${defsMarkup(c)}
-      ${mountainBackdrop()}
-      ${content}
-    </svg>`;
-}
-
-function renderDots() {
-  dots.innerHTML = Array.from({ length: FRAME_COUNT }, (_, index) =>
-    `<i class="${index === state.frame ? "is-active" : ""}"></i>`
-  ).join("");
-}
-
-function renderViewer() {
-  if (state.mode === "hood") {
-    image.innerHTML = jacketSvg(0, state.color, true);
-    image.setAttribute("aria-label", `Chaqueta ${state.colorLabel} con capucha desmontable mostrada por separado`);
-    hint.classList.add("is-hidden");
-    controls.hidden = true;
-    dots.hidden = true;
-    return;
+function makePatternTexture(type, base, light, dark){
+  const canvas=document.createElement("canvas"); canvas.width=512; canvas.height=512;
+  const ctx=canvas.getContext("2d"); ctx.fillStyle=base; ctx.fillRect(0,0,512,512);
+  if(type==="mountain"){
+    ctx.fillStyle=light;
+    for(let y=20;y<540;y+=120){
+      for(let x=-50;x<560;x+=150){
+        ctx.beginPath();ctx.moveTo(x,y+100);ctx.lineTo(x+48,y+20);ctx.lineTo(x+78,y+66);ctx.lineTo(x+112,y+6);ctx.lineTo(x+160,y+100);ctx.closePath();ctx.fill();
+      }
+    }
+    ctx.strokeStyle="#727b84";ctx.lineWidth=9;ctx.globalAlpha=.55;
+    for(let i=0;i<14;i++){ctx.beginPath();ctx.moveTo(Math.random()*512,Math.random()*512);ctx.lineTo(Math.random()*512,Math.random()*512);ctx.stroke()}
+  } else {
+    ctx.fillStyle=light;ctx.fillRect(0,0,512,512);ctx.strokeStyle=dark;ctx.lineWidth=7;ctx.globalAlpha=.72;
+    for(let i=0;i<22;i++){
+      const x=Math.random()*512,y=Math.random()*512;ctx.beginPath();ctx.moveTo(x,y);ctx.bezierCurveTo(x+80,y-60,x+130,y+60,x+220,y-20);ctx.stroke();
+      for(let j=0;j<3;j++){ctx.beginPath();ctx.moveTo(x+55*j,y-10*j);ctx.lineTo(x+75+55*j,y-45-10*j);ctx.stroke()}
+    }
   }
-
-  image.innerHTML = jacketSvg(state.frame, state.color, false);
-  image.setAttribute("aria-label", `Chaqueta ${state.colorLabel}, vista ${Math.round(state.frame * 360 / FRAME_COUNT)} grados`);
-  angleLabel.textContent = `${Math.round(state.frame * 360 / FRAME_COUNT)}°`;
-  controls.hidden = false;
-  dots.hidden = false;
-  renderDots();
+  const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.repeat.set(1.1,1.1);return tex;
 }
 
-function setFrame(nextFrame) {
-  state.frame = ((nextFrame % FRAME_COUNT) + FRAME_COUNT) % FRAME_COUNT;
-  renderViewer();
+function makeMaterial(model, black=false){
+  if(black) return new THREE.MeshStandardMaterial({color:0x14191e,roughness:.7,metalness:.02});
+  const params={color:new THREE.Color(model.color),roughness:.66,metalness:.015};
+  if(model.type!=="solid"){params.map=makePatternTexture(model.type,model.color,model.light,model.dark);params.color=new THREE.Color(0xffffff)}
+  return new THREE.MeshStandardMaterial(params);
 }
 
-function setMode(mode) {
-  state.mode = mode;
-  const is360 = mode === "360";
-  tab360.classList.toggle("is-active", is360);
-  tabHood.classList.toggle("is-active", !is360);
-  tab360.setAttribute("aria-selected", String(is360));
-  tabHood.setAttribute("aria-selected", String(!is360));
-  renderViewer();
+function roundedBox(w,h,d,r=0.12,segments=5){
+  return new RoundedBoxGeometry(w,h,d,segments,r);
 }
 
-function pointerX(event) {
-  return event.touches ? event.touches[0].clientX : event.clientX;
+function puffSegment(w,h,d,material,position,rotation={x:0,y:0,z:0}){
+  const mesh=new THREE.Mesh(roundedBox(w,h,d,Math.min(w,h,d)*.17,6),material);
+  mesh.position.set(position.x,position.y,position.z);mesh.rotation.set(rotation.x||0,rotation.y||0,rotation.z||0);mesh.castShadow=true;mesh.receiveShadow=true;return mesh;
 }
 
-function startDrag(event) {
-  if (state.mode !== "360") return;
-  state.dragging = true;
-  state.startX = pointerX(event);
-  state.startFrame = state.frame;
-  viewer.classList.add("is-dragging");
-  hint.classList.add("is-hidden");
+function logoTexture(){
+  const canvas=document.createElement("canvas");canvas.width=512;canvas.height=180;const ctx=canvas.getContext("2d");ctx.clearRect(0,0,512,180);ctx.fillStyle="#fff";ctx.font="900 54px Arial";ctx.textAlign="left";ctx.fillText("THE",20,58);ctx.fillText("NORTH",20,112);ctx.fillText("FACE",20,166);ctx.lineWidth=18;ctx.strokeStyle="#fff";ctx.beginPath();ctx.arc(270,164,132,-Math.PI/2,0);ctx.stroke();ctx.beginPath();ctx.arc(270,164,88,-Math.PI/2,0);ctx.stroke();const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;return tex;
 }
 
-function moveDrag(event) {
-  if (!state.dragging || state.mode !== "360") return;
-  const delta = pointerX(event) - state.startX;
-  const steps = Math.round(delta / 48);
-  setFrame(state.startFrame - steps);
+function createHood(material){
+  const hood=new THREE.Group();
+  const back=puffSegment(1.75,1.38,.78,material,{x:0,y:.12,z:0},{x:-.05});back.scale.z=.8;hood.add(back);
+  const opening=new THREE.Mesh(new THREE.TorusGeometry(.58,.12,18,48,Math.PI*1.65),new THREE.MeshStandardMaterial({color:0x10151a,roughness:.8}));opening.rotation.z=Math.PI*.175;opening.position.set(0,.12,.45);hood.add(opening);
+  return hood;
 }
 
-function endDrag() {
-  state.dragging = false;
-  viewer.classList.remove("is-dragging");
-}
+function createJacket(model){
+  const group=new THREE.Group();
+  const colorMat=makeMaterial(model,false), blackMat=makeMaterial(model,true), darkMat=new THREE.MeshStandardMaterial({color:0x0b1015,roughness:.65});
 
-viewer.addEventListener("mousedown", startDrag);
-window.addEventListener("mousemove", moveDrag);
-window.addEventListener("mouseup", endDrag);
-viewer.addEventListener("touchstart", startDrag, { passive: true });
-viewer.addEventListener("touchmove", moveDrag, { passive: true });
-viewer.addEventListener("touchend", endDrag);
+  const bodyY=[1.35,.72,.08,-.56];
+  bodyY.forEach((y)=>group.add(puffSegment(2.55,.62,.92,colorMat,{x:0,y,z:0})));
+  group.add(puffSegment(2.58,.58,.95,blackMat,{x:0,y:1.95,z:0}));
 
-document.querySelector("#rotate-left").addEventListener("click", () => setFrame(state.frame - 1));
-document.querySelector("#rotate-right").addEventListener("click", () => setFrame(state.frame + 1));
-tab360.addEventListener("click", () => setMode("360"));
-tabHood.addEventListener("click", () => setMode("hood"));
-
-document.querySelectorAll("[data-color]").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll("[data-color]").forEach((item) => item.classList.remove("is-active"));
-    button.classList.add("is-active");
-    state.color = button.dataset.color;
-    state.colorLabel = button.dataset.label;
-    state.frame = 0;
-    selectedColorName.textContent = state.colorLabel;
-    renderViewer();
+  [-1,1].forEach(side=>{
+    const x=side*1.56;
+    const segments=[1.65,1.05,.45,-.15];
+    segments.forEach((y,i)=>{
+      group.add(puffSegment(.72,.78,.78,colorMat,{x:x+side*i*.08,y,z:0},{z:side*(.18+i*.025)}));
+    });
+    const cuff=puffSegment(.69,.27,.74,darkMat,{x:x+side*.3,y:-.63,z:0},{z:side*.27});group.add(cuff);
   });
-});
 
-document.querySelectorAll("[data-size]").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll("[data-size]").forEach((item) => item.classList.remove("is-active"));
-    button.classList.add("is-active");
-    state.size = button.dataset.size;
-    selectedSizeName.textContent = state.size;
+  const collar=new THREE.Mesh(new THREE.TorusGeometry(.52,.22,18,64,Math.PI*1.58),blackMat);collar.rotation.z=Math.PI*.21;collar.rotation.x=Math.PI/2;collar.position.set(0,2.38,.02);group.add(collar);
+
+  const hood=createHood(blackMat);hood.position.set(0,2.72,-.1);hood.scale.set(.92,.92,.92);group.add(hood);
+
+  const zipper=puffSegment(.075,3.75,.12,darkMat,{x:0,y:.48,z:.51});group.add(zipper);
+  [-1,1].forEach(side=>{
+    const pocket=puffSegment(.12,.76,.11,darkMat,{x:side*.72,y:-.05,z:.53},{z:side*.28});group.add(pocket);
   });
-});
 
-function setQuantity(value) {
-  state.quantity = Math.min(10, Math.max(1, value));
-  quantityOutput.value = state.quantity;
-  quantityOutput.textContent = state.quantity;
+  const logoMat=new THREE.MeshBasicMaterial({map:logoTexture(),transparent:true,side:THREE.FrontSide,depthWrite:false});
+  const logo=new THREE.Mesh(new THREE.PlaneGeometry(.58,.21),logoMat);logo.position.set(.72,2.0,.505);group.add(logo);
+
+  group.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});
+  group.scale.set(.98,.98,.98);group.position.y=-.55;
+  return {group,hood:createDetachedHood(model)};
 }
 
-document.querySelector("#qty-down").addEventListener("click", () => setQuantity(state.quantity - 1));
-document.querySelector("#qty-up").addEventListener("click", () => setQuantity(state.quantity + 1));
-document.querySelector("#buy-button").addEventListener("click", () => dialog.showModal());
-document.querySelector("#dialog-close").addEventListener("click", () => dialog.close());
-dialog.addEventListener("click", (event) => {
-  if (event.target === dialog) dialog.close();
-});
-
-function buildWhatsappUrl(phone, delivery) {
-  const message = [
-    "¡Hola! 👋 Me interesa comprar la chaqueta acolchada térmica:",
-    "",
-    `🎨 Color: ${state.colorLabel}`,
-    `📏 Talla: ${state.size}`,
-    `🔢 Cantidad: ${state.quantity}`,
-    `🚚 Entrega: ${delivery}`,
-    "",
-    "¿Me pueden confirmar disponibilidad, precio y condiciones de entrega?",
-  ].join("\n");
-  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+function createDetachedHood(model){
+  const group=createHood(makeMaterial(model,false));
+  group.rotation.set(-.12,.55,.08);group.scale.set(1.18,1.18,1.18);return group;
 }
 
-document.querySelectorAll("[data-delivery]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const phone = PHONES[button.dataset.zone];
-    const url = buildWhatsappUrl(phone, button.dataset.delivery);
-    window.open(url, "_blank", "noopener,noreferrer");
-    dialog.close();
-  });
-});
+function setupScene(canvas,{hood=false}={}){
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:"high-performance"});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.set(hood?3.4:0,hood?2.2:1.0,hood?5.3:7.1);
+  const hemi=new THREE.HemisphereLight(0xffffff,0x24445d,2.5);scene.add(hemi);
+  const key=new THREE.DirectionalLight(0xffffff,5);key.position.set(4,7,6);key.castShadow=true;scene.add(key);
+  const fill=new THREE.DirectionalLight(0x8fd8ff,2.2);fill.position.set(-5,2,3);scene.add(fill);
+  const rim=new THREE.DirectionalLight(0xffffff,2.1);rim.position.set(0,4,-5);scene.add(rim);
+  const floor=new THREE.Mesh(new THREE.CircleGeometry(4.5,64),new THREE.ShadowMaterial({color:0x17354b,opacity:.16}));floor.rotation.x=-Math.PI/2;floor.position.y=hood?-1.0:-2.52;floor.receiveShadow=true;scene.add(floor);
+  let controls=null;
+  if(!hood){controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.dampingFactor=.075;controls.enablePan=false;controls.minDistance=5.1;controls.maxDistance=9.2;controls.minPolarAngle=.6;controls.maxPolarAngle=2.18;controls.target.set(0,.3,0)}
+  return {renderer,scene,camera,controls,current:null};
+}
 
-document.querySelector("#year").textContent = new Date().getFullYear();
-renderViewer();
+const main3d=setupScene(document.querySelector("#product-canvas"));
+const hood3d=setupScene(document.querySelector("#hood-canvas"),{hood:true});
+
+function fitRenderer(ctx){
+  const rect=ctx.renderer.domElement.getBoundingClientRect();
+  const w=Math.max(1,Math.floor(rect.width)),h=Math.max(1,Math.floor(rect.height));
+  if(ctx.renderer.domElement.width!==Math.floor(w*ctx.renderer.getPixelRatio())||ctx.renderer.domElement.height!==Math.floor(h*ctx.renderer.getPixelRatio())){
+    ctx.renderer.setSize(w,h,false);ctx.camera.aspect=w/h;ctx.camera.updateProjectionMatrix();
+  }
+}
+
+function disposeObject(object){
+  object.traverse(o=>{
+    if(o.geometry)o.geometry.dispose();
+    if(o.material){const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>{if(m.map)m.map.dispose();m.dispose()})}
+  });
+}
+
+function set3DModel(model){
+  [main3d,hood3d].forEach(ctx=>{if(ctx.current){ctx.scene.remove(ctx.current);disposeObject(ctx.current);ctx.current=null}});
+  const jacket=createJacket(model);main3d.current=jacket.group;main3d.scene.add(jacket.group);hood3d.current=jacket.hood;hood3d.scene.add(jacket.hood);
+  main3d.camera.position.set(0,1.0,7.1);main3d.controls.target.set(0,.3,0);main3d.controls.update();
+  els.loading.classList.add("is-hidden");
+}
+
+function animate(){
+  requestAnimationFrame(animate);fitRenderer(main3d);fitRenderer(hood3d);
+  main3d.controls.autoRotate=state.autoRotate;main3d.controls.autoRotateSpeed=2.1;main3d.controls.update();
+  main3d.renderer.render(main3d.scene,main3d.camera);hood3d.renderer.render(hood3d.scene,hood3d.camera);
+}
+
+function swatchBackground(model){
+  if(model.type==="mountain")return "linear-gradient(135deg,#191e23 0 35%,#f0f2f4 35% 52%,#4c555e 52% 68%,#fff 68%)";
+  if(model.type==="branches")return "repeating-linear-gradient(45deg,#e7dccb 0 8px,#444 8px 10px,#d6c8b4 10px 18px)";
+  return model.color;
+}
+
+function modelCardMarkup(model){
+  return `<button class="model-card${model.id===state.model.id?" is-active":""}" type="button" data-model="${model.id}">
+    <span class="model-card-art"><span class="mini-jacket" style="--mini-color:${swatchBackground(model)}"><i class="mini-hood"></i><i class="mini-yoke"></i><i class="mini-zip"></i><i class="mini-logo"></i></span></span>
+    <span class="model-card-copy"><small>${model.design}</small><strong>${model.name}</strong><b>$25.990</b></span>
+  </button>`;
+}
+
+function renderModels(){
+  els.modelGrid.innerHTML=MODELS.map(modelCardMarkup).join("");
+  els.modelOptions.innerHTML=MODELS.map(m=>`<button class="model-option${m.id===state.model.id?" is-active":""}" type="button" data-model="${m.id}" aria-label="${m.name}" title="${m.name}" style="background:${swatchBackground(m)}"></button>`).join("");
+  document.querySelectorAll("[data-model]").forEach(button=>button.addEventListener("click",()=>selectModel(button.dataset.model,true)));
+}
+
+function selectModel(id,scroll=false){
+  const model=MODELS.find(m=>m.id===id);if(!model)return;state.model=model;
+  els.viewerTitle.textContent=model.name;els.selectedTitle.textContent=model.name;els.selectedName.textContent=model.name;els.selectedDescription.textContent=model.description;
+  renderModels();set3DModel(model);
+  if(scroll)document.querySelector("#producto").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+els.viewer.addEventListener("pointerdown",()=>els.viewerHint.classList.add("is-hidden"),{once:true});
+els.autoRotate.addEventListener("click",()=>{state.autoRotate=!state.autoRotate;els.autoRotate.setAttribute("aria-pressed",String(state.autoRotate));els.autoRotate.textContent=state.autoRotate?"Detener giro":"Giro automático"});
+els.resetView.addEventListener("click",()=>{state.autoRotate=false;els.autoRotate.setAttribute("aria-pressed","false");els.autoRotate.textContent="Giro automático";main3d.camera.position.set(0,1.0,7.1);main3d.controls.target.set(0,.3,0);main3d.controls.update()});
+
+document.querySelectorAll("[data-size]").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll("[data-size]").forEach(b=>b.classList.remove("is-active"));button.classList.add("is-active");state.size=button.dataset.size;els.selectedSize.textContent=state.size}));
+function setQuantity(q){state.quantity=Math.min(10,Math.max(1,q));els.quantity.value=state.quantity;els.quantity.textContent=state.quantity}
+document.querySelector("#qty-down").addEventListener("click",()=>setQuantity(state.quantity-1));document.querySelector("#qty-up").addEventListener("click",()=>setQuantity(state.quantity+1));
+
+document.querySelector("#buy-button").addEventListener("click",()=>els.dialog.showModal());document.querySelector("#dialog-close").addEventListener("click",()=>els.dialog.close());els.dialog.addEventListener("click",e=>{if(e.target===els.dialog)els.dialog.close()});
+function whatsappUrl(phone,delivery){const total=PRICE*state.quantity;const msg=["¡Hola! 👋 Me interesa comprar esta chaqueta:","",`🧥 Modelo: ${state.model.name}`,`🎨 Diseño: ${state.model.design}`,`📏 Talla: ${state.size}`,`🔢 Cantidad: ${state.quantity}`,`💰 Precio unitario: ${formatPrice(PRICE)}`,`💳 Total: ${formatPrice(total)}`,`🚚 Entrega: ${delivery}`,"","¿Me pueden confirmar disponibilidad y condiciones de entrega?"].join("\n");return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`}
+document.querySelectorAll("[data-delivery]").forEach(button=>button.addEventListener("click",()=>{window.open(whatsappUrl(PHONES[button.dataset.zone],button.dataset.delivery),"_blank","noopener,noreferrer");els.dialog.close()}));
+
+document.querySelector("#year").textContent=new Date().getFullYear();renderModels();set3DModel(state.model);animate();
