@@ -1,363 +1,167 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Polera Essential: cómoda, versátil y hecha para todos los días. Compra directamente por WhatsApp."
-    />
-    <meta name="theme-color" content="#f5f0e8" />
-    <title>LOWY — Polera Essential</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="announcement">
-      <p>Despachos en Santiago · Entregas en Metro sin costo</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Chaqueta acolchada térmica con vista interactiva 360°, capucha desmontable y compra directa por WhatsApp." />
+  <meta name="theme-color" content="#071522" />
+  <title>LOWY Outerwear — Chaqueta térmica 360°</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="announcement">PAGO AL RECIBIR · RETIRO Y DESPACHOS EN CHILE</div>
+
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="LOWY, volver al inicio">
+      <span class="brand-mark">L</span>
+      <span><strong>LOWY</strong><small>OUTERWEAR</small></span>
+    </a>
+    <nav aria-label="Navegación principal">
+      <a href="#producto">Producto</a>
+      <a href="#entregas">Entregas</a>
+      <a href="#preguntas">Preguntas</a>
+    </nav>
+    <a class="header-cta" href="#producto">Ver chaqueta</a>
+  </header>
+
+  <main id="inicio">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Colección invierno</p>
+        <h1>Diseñada para<br /><em>el frío</em></h1>
+        <p>Explora cada ángulo, revisa la capucha desmontable y elige tu color antes de coordinar la compra por WhatsApp.</p>
+        <a class="primary-button" href="#producto">Explorar en 360°</a>
+      </div>
+      <div class="mountain-scene" aria-hidden="true">
+        <div class="moon"></div>
+        <div class="mountain back"></div>
+        <div class="mountain middle"></div>
+        <div class="mountain front"></div>
+        <span class="scene-label">CHAQUETA TÉRMICA</span>
+      </div>
+    </section>
+
+    <section class="product-section" id="producto">
+      <div class="viewer-column">
+        <div class="viewer-tabs" role="tablist" aria-label="Vista del producto">
+          <button class="viewer-tab is-active" id="tab-360" type="button" role="tab" aria-selected="true">Vista 360°</button>
+          <button class="viewer-tab" id="tab-hood" type="button" role="tab" aria-selected="false">Capucha desmontable</button>
+        </div>
+
+        <div class="product-viewer" id="product-viewer">
+          <div id="product-image" class="spin-image" role="img" aria-label="Chaqueta acolchada celeste, vista frontal"></div>
+          <div class="viewer-hint" id="viewer-hint">
+            <span class="rotate-icon">↔</span>
+            <strong>Arrastra para rotar</strong>
+            <small>Vista interactiva 360°</small>
+          </div>
+          <div class="frame-dots" id="frame-dots" aria-hidden="true"></div>
+        </div>
+
+        <div class="viewer-controls" id="viewer-controls">
+          <button type="button" id="rotate-left" aria-label="Rotar hacia la izquierda">←</button>
+          <span><strong id="angle-label">0°</strong> · puedes arrastrar con mouse o dedo</span>
+          <button type="button" id="rotate-right" aria-label="Rotar hacia la derecha">→</button>
+        </div>
+        <p class="viewer-note">La marca aparece únicamente en las vistas delanteras; la parte trasera no lleva logotipo.</p>
+      </div>
+
+      <div class="product-info">
+        <p class="eyebrow dark">Chaqueta acolchada</p>
+        <h2>Chaqueta térmica<br />con capucha desmontable</h2>
+        <p class="description">Diseño acolchado, cuello alto y capucha removible. Disponible en cuatro colores para combinar protección y estilo durante el invierno.</p>
+
+        <div class="feature-list">
+          <span>✓ Interior térmico</span>
+          <span>✓ Capucha desmontable</span>
+          <span>✓ Bolsillos laterales</span>
+          <span>✓ Ajuste en puños</span>
+        </div>
+
+        <div class="option-block">
+          <div class="option-title"><span>Color</span><strong id="selected-color-name">Celeste</strong></div>
+          <div class="color-options" id="color-options">
+            <button class="color-swatch celeste is-active" type="button" data-color="celeste" data-label="Celeste" aria-label="Color celeste"></button>
+            <button class="color-swatch negro" type="button" data-color="negro" data-label="Negro" aria-label="Color negro"></button>
+            <button class="color-swatch rojo" type="button" data-color="rojo" data-label="Rojo" aria-label="Color rojo"></button>
+            <button class="color-swatch crema" type="button" data-color="crema" data-label="Crema" aria-label="Color crema"></button>
+          </div>
+        </div>
+
+        <div class="option-block">
+          <div class="option-title"><span>Talla</span><strong id="selected-size-name">M</strong></div>
+          <div class="size-options" id="size-options">
+            <button type="button" data-size="S">S</button>
+            <button class="is-active" type="button" data-size="M">M</button>
+            <button type="button" data-size="L">L</button>
+            <button type="button" data-size="XL">XL</button>
+            <button type="button" data-size="XXL">XXL</button>
+          </div>
+        </div>
+
+        <div class="purchase-row">
+          <div class="quantity" aria-label="Cantidad">
+            <button type="button" id="qty-down" aria-label="Disminuir cantidad">−</button>
+            <output id="quantity">1</output>
+            <button type="button" id="qty-up" aria-label="Aumentar cantidad">+</button>
+          </div>
+          <button class="primary-button buy-button" id="buy-button" type="button">Comprar por WhatsApp</button>
+        </div>
+        <p class="secure-note">🔒 El número de WhatsApp se seleccionará automáticamente según tu zona de entrega.</p>
+      </div>
+    </section>
+
+    <section class="delivery-section" id="entregas">
+      <div>
+        <p class="eyebrow dark">Entrega inteligente</p>
+        <h2>Elige tu zona antes de enviar el pedido</h2>
+      </div>
+      <div class="delivery-grid">
+        <article><strong>01</strong><h3>Retiro en Santiago</h3><p>Coordinación directa por WhatsApp.</p></article>
+        <article><strong>02</strong><h3>Despacho en Santiago</h3><p>Atención mediante el número destinado a Santiago.</p></article>
+        <article><strong>03</strong><h3>RM y periferia</h3><p>Coordinación con el número de despachos externos.</p></article>
+        <article><strong>04</strong><h3>Otras regiones</h3><p>Envío coordinado para el resto de Chile.</p></article>
+      </div>
+    </section>
+
+    <section class="faq-section" id="preguntas">
+      <div>
+        <p class="eyebrow dark">Preguntas frecuentes</p>
+        <h2>Todo antes de comprar</h2>
+      </div>
+      <div class="faq-list">
+        <details><summary>¿La capucha se puede retirar?</summary><p>Sí. Cada color incluye una imagen adicional que muestra la capucha separada para evidenciar su desmontabilidad.</p></details>
+        <details><summary>¿Cómo funciona la vista 360°?</summary><p>Arrastra horizontalmente la fotografía con el mouse o con el dedo. También puedes usar las flechas ubicadas debajo del visor.</p></details>
+        <details><summary>¿Cómo se elige el número de WhatsApp?</summary><p>Antes de enviar el pedido, seleccionas retiro o zona de despacho. La página abre automáticamente el contacto correspondiente.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#inicio"><span class="brand-mark">L</span><span><strong>LOWY</strong><small>OUTERWEAR</small></span></a>
+    <p>Chaquetas de invierno con compra directa por WhatsApp.</p>
+    <p>© <span id="year"></span> LOWY</p>
+  </footer>
+
+  <dialog class="delivery-dialog" id="delivery-dialog">
+    <div class="dialog-shell">
+      <button class="dialog-close" id="dialog-close" type="button" aria-label="Cerrar">×</button>
+      <p class="eyebrow dark">Último paso</p>
+      <h2>¿Cómo recibirás tu chaqueta?</h2>
+      <p class="dialog-copy">Selecciona una alternativa. Abriremos el WhatsApp correspondiente con tu color, talla, cantidad y tipo de entrega.</p>
+      <div class="delivery-options">
+        <button type="button" data-delivery="Retiro dentro de Santiago" data-zone="santiago"><span>📍</span><strong>Retiro en Santiago</strong><small>Coordinar punto y horario</small></button>
+        <button type="button" data-delivery="Despacho dentro de Santiago" data-zone="santiago"><span>🚚</span><strong>Despacho en Santiago</strong><small>Comunas dentro de Santiago</small></button>
+        <button type="button" data-delivery="Despacho en Región Metropolitana / periferia" data-zone="regiones"><span>🏙️</span><strong>RM / periferia</strong><small>Fuera del radio central</small></button>
+        <button type="button" data-delivery="Despacho a otras regiones de Chile" data-zone="regiones"><span>📦</span><strong>Otras regiones</strong><small>Envíos al resto de Chile</small></button>
+      </div>
     </div>
+  </dialog>
 
-    <header class="site-header">
-      <a class="brand" href="#inicio" aria-label="LOWY, volver al inicio">
-        <span class="brand-mark" aria-hidden="true">L</span>
-        <span>LOWY</span>
-      </a>
-      <nav aria-label="Navegación principal">
-        <a href="#productos">Productos</a>
-        <a href="#detalles">Detalles</a>
-        <a class="nav-cta" href="#comprar">Comprar</a>
-      </nav>
-    </header>
-
-    <main id="inicio">
-      <div id="productos"></div>
-      <section class="hero" id="producto">
-        <div class="product-visual">
-          <span class="eyebrow visual-label">Nueva colección</span>
-          <div class="shape shape-one" aria-hidden="true"></div>
-          <div class="shape shape-two" aria-hidden="true"></div>
-
-          <svg
-            class="shirt"
-            viewBox="0 0 520 560"
-            role="img"
-            aria-labelledby="shirt-title shirt-description"
-          >
-            <title id="shirt-title">Polera Essential negra</title>
-            <desc id="shirt-description">
-              Polera de manga corta con cuello redondo y diseño minimalista.
-            </desc>
-            <defs>
-              <linearGradient id="shirtShade" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#2d2d2a" />
-                <stop offset="100%" stop-color="#11110f" />
-              </linearGradient>
-              <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
-                <feDropShadow dx="0" dy="20" stdDeviation="18" flood-opacity=".2" />
-              </filter>
-            </defs>
-            <path
-              class="shirt-body"
-              filter="url(#shadow)"
-              fill="url(#shirtShade)"
-              d="M181 77c18 24 45 37 79 37s61-13 79-37l95 53c15 8 21 26 14 41l-43 92-57-25v248c0 11-9 20-20 20H192c-11 0-20-9-20-20V238l-57 25-43-92c-7-15-1-33 14-41l95-53Z"
-            />
-            <path
-              fill="none"
-              stroke="#f6f1e9"
-              stroke-opacity=".15"
-              stroke-width="7"
-              d="M181 77c15 47 113 53 158 0"
-            />
-            <path
-              fill="none"
-              stroke="#fff"
-              stroke-opacity=".11"
-              stroke-width="4"
-              d="M172 237v249m176-249v249"
-            />
-            <g class="shirt-logo" fill="#f6f1e9">
-              <path d="M228 276h13l38 54v-54h14v80h-13l-38-54v54h-14v-80Z" />
-            </g>
-          </svg>
-
-          <div class="floating-tag">
-            <span>100%</span>
-            <small>algodón</small>
-          </div>
-        </div>
-
-        <div class="product-info" id="comprar">
-          <p class="eyebrow">Esencial de temporada</p>
-          <h1>Polera<br /><em>Essential</em></h1>
-          <p class="product-description">
-            Suave, cómoda y fácil de combinar. Una polera de calce relajado que
-            funciona todos los días.
-          </p>
-
-          <div class="price-row">
-            <p class="price">$4.000 <span>CLP</span></p>
-            <span class="stock"><i aria-hidden="true"></i> Disponible</span>
-          </div>
-
-          <form id="product-form">
-            <fieldset>
-              <legend>
-                Color <strong id="selected-color">Negro</strong>
-              </legend>
-              <div class="color-options">
-                <label class="color-option">
-                  <input type="radio" name="color" value="Negro" checked />
-                  <span class="swatch swatch-black" title="Negro"></span>
-                  <span class="sr-only">Negro</span>
-                </label>
-                <label class="color-option">
-                  <input type="radio" name="color" value="Blanco" />
-                  <span class="swatch swatch-white" title="Blanco"></span>
-                  <span class="sr-only">Blanco</span>
-                </label>
-                <label class="color-option">
-                  <input type="radio" name="color" value="Beige" />
-                  <span class="swatch swatch-beige" title="Beige"></span>
-                  <span class="sr-only">Beige</span>
-                </label>
-              </div>
-            </fieldset>
-
-            <fieldset>
-              <div class="legend-row">
-                <legend>Talla</legend>
-                <button class="size-guide-button" type="button" id="open-size-guide">
-                  Guía de tallas
-                </button>
-              </div>
-              <div class="size-options">
-                <label>
-                  <input type="radio" name="size" value="S" />
-                  <span>S</span>
-                </label>
-                <label>
-                  <input type="radio" name="size" value="M" checked />
-                  <span>M</span>
-                </label>
-                <label>
-                  <input type="radio" name="size" value="L" />
-                  <span>L</span>
-                </label>
-                <label>
-                  <input type="radio" name="size" value="XL" />
-                  <span>XL</span>
-                </label>
-              </div>
-            </fieldset>
-
-            <div class="purchase-row">
-              <div class="quantity">
-                <button type="button" id="decrease" aria-label="Disminuir cantidad">−</button>
-                <output id="quantity" aria-live="polite">1</output>
-                <button type="button" id="increase" aria-label="Aumentar cantidad">+</button>
-              </div>
-              <a
-                class="whatsapp-button"
-                id="whatsapp-button"
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <svg viewBox="0 0 32 32" aria-hidden="true">
-                  <path
-                    d="M16.04 3a12.76 12.76 0 0 0-10.9 19.4L3.34 29l6.76-1.77A12.77 12.77 0 1 0 16.04 3Zm0 23.37c-2.1 0-4.15-.56-5.94-1.62l-.42-.25-4 .99 1.06-3.87-.28-.44a10.57 10.57 0 1 1 9.58 5.19Zm5.8-7.9c-.32-.16-1.88-.92-2.17-1.03-.29-.1-.5-.16-.71.16-.21.32-.82 1.03-1 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.88-1.76-2.2-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.18.21-.32.32-.52.1-.21.05-.4-.03-.56-.08-.16-.71-1.72-.98-2.35-.25-.62-.52-.54-.71-.55h-.61c-.21 0-.55.08-.84.4-.29.31-1.11 1.08-1.11 2.64s1.14 3.07 1.29 3.28c.16.21 2.24 3.42 5.42 4.8.76.32 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.38.19-1.51-.08-.13-.29-.21-.61-.37Z"
-                  />
-                </svg>
-                Comprar por WhatsApp
-              </a>
-            </div>
-            <p class="purchase-note">
-              Te abriremos WhatsApp con tu pedido listo para enviar. El pago y
-              despacho se coordinan directamente.
-            </p>
-          </form>
-        </div>
-      </section>
-
-      <section class="pants-product" id="pantalon">
-        <div class="pants-info">
-          <p class="eyebrow">Nuevo en la tienda</p>
-          <h2>Pantalón<br /><em>Urban</em></h2>
-          <p class="product-description">
-            Cómodo y versátil, con calce relajado para combinar con tus looks de todos los días.
-          </p>
-
-          <div class="price-row">
-            <p class="price">$9.990 <span>CLP</span></p>
-            <span class="stock"><i aria-hidden="true"></i> 10 unidades disponibles</span>
-          </div>
-
-          <form id="pants-form">
-            <fieldset>
-              <legend>Talla</legend>
-              <div class="size-options">
-                <label><input type="radio" name="pants-size" value="S" /><span>S</span></label>
-                <label><input type="radio" name="pants-size" value="M" checked /><span>M</span></label>
-                <label><input type="radio" name="pants-size" value="L" /><span>L</span></label>
-                <label><input type="radio" name="pants-size" value="XL" /><span>XL</span></label>
-              </div>
-            </fieldset>
-
-            <div class="purchase-row">
-              <div class="quantity">
-                <button type="button" id="pants-decrease" aria-label="Disminuir cantidad">−</button>
-                <output id="pants-quantity" aria-live="polite">1</output>
-                <button type="button" id="pants-increase" aria-label="Aumentar cantidad">+</button>
-              </div>
-              <a class="whatsapp-button" id="pants-whatsapp-button" href="#" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 32 32" aria-hidden="true">
-                  <path d="M16.04 3a12.76 12.76 0 0 0-10.9 19.4L3.34 29l6.76-1.77A12.77 12.77 0 1 0 16.04 3Zm0 23.37c-2.1 0-4.15-.56-5.94-1.62l-.42-.25-4 .99 1.06-3.87-.28-.44a10.57 10.57 0 1 1 9.58 5.19Zm5.8-7.9c-.32-.16-1.88-.92-2.17-1.03-.29-.1-.5-.16-.71.16-.21.32-.82 1.03-1 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.88-1.76-2.2-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.18.21-.32.32-.52.1-.21.05-.4-.03-.56-.08-.16-.71-1.72-.98-2.35-.25-.62-.52-.54-.71-.55h-.61c-.21 0-.55.08-.84.4-.29.31-1.11 1.08-1.11 2.64s1.14 3.07 1.29 3.28c.16.21 2.24 3.42 5.42 4.8.76.32 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.38.19-1.51-.08-.13-.29-.21-.61-.37Z" />
-                </svg>
-                Comprar por WhatsApp
-              </a>
-            </div>
-            <p class="purchase-note">Stock total: 10 unidades. El pago y despacho se coordinan por WhatsApp.</p>
-          </form>
-        </div>
-
-        <div class="pants-visual" aria-label="Pantalón Urban negro">
-          <span class="eyebrow visual-label">10 unidades</span>
-          <div class="pants-shape" aria-hidden="true"></div>
-          <svg class="pants" viewBox="0 0 420 560" role="img" aria-labelledby="pants-title">
-            <title id="pants-title">Pantalón Urban negro</title>
-            <defs>
-              <linearGradient id="pantsShade" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#33332f" />
-                <stop offset="100%" stop-color="#141412" />
-              </linearGradient>
-              <filter id="pantsShadow" x="-30%" y="-20%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="22" stdDeviation="18" flood-opacity=".22" />
-              </filter>
-            </defs>
-            <path filter="url(#pantsShadow)" fill="url(#pantsShade)" d="M105 48h210l-10 145-18 319h-91l14-278-16 278h-91L115 193 105 48Z" />
-            <path fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="5" d="M110 90h200M210 90v144" />
-            <path fill="none" stroke="#fff" stroke-opacity=".09" stroke-width="3" d="M130 110l-16 380m176-380 8 380" />
-          </svg>
-          <div class="floating-tag pants-tag"><span>$9.990</span><small>CLP</small></div>
-        </div>
-      </section>
-
-      <section class="catalog-section" id="catalogo">
-        <div>
-          <p class="eyebrow">Descubre más productos</p>
-          <h2>Catálogo LOWY</h2>
-          <p class="catalog-update">
-            Descubre más productos en nuestro catálogo, actualizado diariamente.
-          </p>
-        </div>
-        <a class="catalog-button" href="./catalogo-lowy.pdf?v=2" target="_blank" rel="noopener noreferrer">
-          <span aria-hidden="true">📖</span>
-          Ver catálogo actualizado
-        </a>
-      </section>
-
-      <section class="benefits" aria-label="Métodos de pago">
-        <article>
-          <span aria-hidden="true">💳</span>
-          <div>
-            <h2>Pago con tarjetas</h2>
-            <p>Paga de forma cómoda con tus tarjetas.</p>
-          </div>
-        </article>
-        <article>
-          <span aria-hidden="true">📦</span>
-          <div>
-            <h2>Paga al momento de recibir</h2>
-            <p>Realiza el pago cuando recibas tu pedido.</p>
-          </div>
-        </article>
-      </section>
-
-      <section class="benefits" aria-label="Beneficios de compra">
-        <article>
-          <span aria-hidden="true">01</span>
-          <div>
-            <h2>Compra directa</h2>
-            <p>Atención personal por WhatsApp.</p>
-          </div>
-        </article>
-        <article>
-          <span aria-hidden="true">02</span>
-          <div>
-            <h2>Despacho rápido</h2>
-            <p>Envíos dentro de Santiago.</p>
-          </div>
-        </article>
-        <article>
-          <span aria-hidden="true">03</span>
-          <div>
-            <h2>Cambios simples</h2>
-            <p>Consulta disponibilidad de talla.</p>
-          </div>
-        </article>
-      </section>
-
-      <section class="details" id="detalles">
-        <div>
-          <p class="eyebrow">Hecha para repetir</p>
-          <h2>Tu nueva favorita,<br />sin complicaciones.</h2>
-        </div>
-        <div class="detail-copy">
-          <p>
-            Confeccionada en algodón suave de gramaje medio. Mantiene su forma,
-            se siente agradable sobre la piel y combina con todo.
-          </p>
-          <ul>
-            <li>Calce relajado unisex</li>
-            <li>Cuello redondo reforzado</li>
-            <li>Lavable a máquina</li>
-            <li>Disponible de S a XL</li>
-          </ul>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <a class="brand footer-brand" href="#inicio">
-        <span class="brand-mark" aria-hidden="true">L</span>
-        <span>LOWY</span>
-      </a>
-      <p>© <span id="year"></span> LOWY. Santiago, Chile.</p>
-      <a id="footer-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
-        Hablar por WhatsApp
-      </a>
-    </footer>
-
-    <dialog id="size-guide">
-      <button class="close-dialog" id="close-size-guide" type="button" aria-label="Cerrar">
-        ×
-      </button>
-      <p class="eyebrow">Encuentra tu talla</p>
-      <h2>Guía de tallas</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Talla</th>
-            <th>Pecho</th>
-            <th>Largo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>S</td><td>50 cm</td><td>68 cm</td></tr>
-          <tr><td>M</td><td>53 cm</td><td>71 cm</td></tr>
-          <tr><td>L</td><td>56 cm</td><td>74 cm</td></tr>
-          <tr><td>XL</td><td>59 cm</td><td>77 cm</td></tr>
-        </tbody>
-      </table>
-      <p class="dialog-note">Medidas aproximadas de la prenda en superficie plana.</p>
-    </dialog>
-
-    <script src="script.js"></script>
-  </body>
+  <script src="script.js"></script>
+</body>
 </html>
