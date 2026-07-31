@@ -3,17 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Chaqueta acolchada térmica con vista interactiva 360°, capucha desmontable y compra directa por WhatsApp." />
+  <meta name="description" content="Chaquetas acolchadas térmicas a $25.990 con modelos interactivos 360°, capucha desmontable y compra directa por WhatsApp." />
   <meta name="theme-color" content="#071522" />
-  <title>LOWY Outerwear — Chaqueta térmica 360°</title>
+  <title>LOWY Outerwear — Chaquetas térmicas 360°</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .models-section{padding:5.5rem 5vw;background:#eef5f9}
+    .section-heading{display:flex;justify-content:space-between;align-items:end;gap:2rem;margin-bottom:2rem}
+    .section-heading h2{margin:0;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.06em;line-height:1}
+    .section-heading>p{max-width:34rem;margin:0;color:#637489;line-height:1.75}
+    .model-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+    .model-card{overflow:hidden;padding:0;border:1px solid rgba(16,32,51,.12);border-radius:24px;background:white;text-align:left;cursor:pointer;box-shadow:0 14px 38px rgba(8,27,44,.07);transition:.22s ease}
+    .model-card:hover,.model-card.is-active{transform:translateY(-4px);border-color:#49b8ed;box-shadow:0 20px 48px rgba(8,27,44,.14)}
+    .model-card.is-active{outline:3px solid rgba(73,184,237,.22)}
+    .model-card-art{display:block;aspect-ratio:1/1;background:radial-gradient(circle at 50% 35%,#fff,#dce7ee);overflow:hidden}
+    .model-card-art svg{display:block;width:100%;height:100%}
+    .model-card-copy{display:grid;gap:.28rem;padding:1rem 1.05rem 1.15rem}
+    .model-card-copy small{color:#637489;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em}
+    .model-card-copy strong{font-family:Manrope,sans-serif;font-size:1rem}
+    .model-card-copy b{margin-top:.35rem;font-size:1.08rem;color:#1979ad}
+    .price-line{display:flex;align-items:baseline;gap:.45rem;margin:.2rem 0 1rem}
+    .price-line strong{font-family:Manrope,sans-serif;font-size:2rem}
+    .price-line span{color:#637489;font-size:.72rem;letter-spacing:.12em}
+    .model-options{display:flex;flex-wrap:wrap;gap:.7rem}
+    .model-option{width:42px;height:42px;border-radius:50%;border:4px solid white;box-shadow:0 0 0 1px rgba(16,32,51,.2);cursor:pointer;transition:.2s ease}
+    .model-option.is-active{box-shadow:0 0 0 3px #102033;transform:scale(.9)}
+    @media(max-width:1050px){.model-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:760px){.models-section{padding:4rem 1rem}.section-heading{align-items:start;flex-direction:column}.model-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.model-card-copy{padding:.8rem}.model-card-copy strong{font-size:.9rem}}
+  </style>
 </head>
 <body>
-  <div class="announcement">PAGO AL RECIBIR · RETIRO Y DESPACHOS EN CHILE</div>
+  <div class="announcement">TODOS LOS MODELOS A $25.990 · PAGO AL RECIBIR · RETIRO Y DESPACHOS EN CHILE</div>
 
   <header class="site-header">
     <a class="brand" href="#inicio" aria-label="LOWY, volver al inicio">
@@ -21,28 +45,40 @@
       <span><strong>LOWY</strong><small>OUTERWEAR</small></span>
     </a>
     <nav aria-label="Navegación principal">
-      <a href="#producto">Producto</a>
+      <a href="#modelos">Modelos</a>
+      <a href="#producto">Vista 360°</a>
       <a href="#entregas">Entregas</a>
       <a href="#preguntas">Preguntas</a>
     </nav>
-    <a class="header-cta" href="#producto">Ver chaqueta</a>
+    <a class="header-cta" href="#modelos">Ver modelos</a>
   </header>
 
   <main id="inicio">
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow">Colección invierno</p>
-        <h1>Diseñada para<br /><em>el frío</em></h1>
-        <p>Explora cada ángulo, revisa la capucha desmontable y elige tu color antes de coordinar la compra por WhatsApp.</p>
-        <a class="primary-button" href="#producto">Explorar en 360°</a>
+        <h1>Elige tu<br /><em>modelo</em></h1>
+        <p>Ocho diseños acolchados, todos a $25.990. Selecciona un modelo, explóralo en 360° y revisa su capucha desmontable.</p>
+        <a class="primary-button" href="#modelos">Ver colección</a>
       </div>
       <div class="mountain-scene" aria-hidden="true">
         <div class="moon"></div>
         <div class="mountain back"></div>
         <div class="mountain middle"></div>
         <div class="mountain front"></div>
-        <span class="scene-label">CHAQUETA TÉRMICA</span>
+        <span class="scene-label">8 MODELOS · $25.990</span>
       </div>
+    </section>
+
+    <section class="models-section" id="modelos">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow dark">Modelos disponibles</p>
+          <h2>Elige la chaqueta que prefieras</h2>
+        </div>
+        <p>Presiona un modelo para abrirlo en el visor interactivo. Todos incluyen capucha desmontable y tienen el mismo precio.</p>
+      </div>
+      <div class="model-grid" id="model-grid" aria-live="polite"></div>
     </section>
 
     <section class="product-section" id="producto">
@@ -53,7 +89,7 @@
         </div>
 
         <div class="product-viewer" id="product-viewer">
-          <div id="product-image" class="spin-image" role="img" aria-label="Chaqueta acolchada celeste, vista frontal"></div>
+          <div id="product-image" class="spin-image" role="img" aria-label="Chaqueta acolchada, vista frontal"></div>
           <div class="viewer-hint" id="viewer-hint">
             <span class="rotate-icon">↔</span>
             <strong>Arrastra para rotar</strong>
@@ -71,9 +107,12 @@
       </div>
 
       <div class="product-info">
-        <p class="eyebrow dark">Chaqueta acolchada</p>
-        <h2>Chaqueta térmica<br />con capucha desmontable</h2>
-        <p class="description">Diseño acolchado, cuello alto y capucha removible. Disponible en cuatro colores para combinar protección y estilo durante el invierno.</p>
+        <p class="eyebrow dark">Modelo seleccionado</p>
+        <h2 id="selected-model-title">Cumbre Celeste</h2>
+        <div class="price-line">
+          <strong>$25.990</strong><span>CLP</span>
+        </div>
+        <p class="description" id="selected-model-description">Chaqueta bicolor celeste y negra, de estilo outdoor y acolchado térmico.</p>
 
         <div class="feature-list">
           <span>✓ Interior térmico</span>
@@ -83,13 +122,8 @@
         </div>
 
         <div class="option-block">
-          <div class="option-title"><span>Color</span><strong id="selected-color-name">Celeste</strong></div>
-          <div class="color-options" id="color-options">
-            <button class="color-swatch celeste is-active" type="button" data-color="celeste" data-label="Celeste" aria-label="Color celeste"></button>
-            <button class="color-swatch negro" type="button" data-color="negro" data-label="Negro" aria-label="Color negro"></button>
-            <button class="color-swatch rojo" type="button" data-color="rojo" data-label="Rojo" aria-label="Color rojo"></button>
-            <button class="color-swatch crema" type="button" data-color="crema" data-label="Crema" aria-label="Color crema"></button>
-          </div>
+          <div class="option-title"><span>Modelo</span><strong id="selected-model-name">Cumbre Celeste</strong></div>
+          <div class="model-options" id="model-options"></div>
         </div>
 
         <div class="option-block">
@@ -134,8 +168,9 @@
         <h2>Todo antes de comprar</h2>
       </div>
       <div class="faq-list">
-        <details><summary>¿La capucha se puede retirar?</summary><p>Sí. Cada color incluye una imagen adicional que muestra la capucha separada para evidenciar su desmontabilidad.</p></details>
-        <details><summary>¿Cómo funciona la vista 360°?</summary><p>Arrastra horizontalmente la fotografía con el mouse o con el dedo. También puedes usar las flechas ubicadas debajo del visor.</p></details>
+        <details><summary>¿Cuál es el precio?</summary><p>Todos los modelos publicados tienen un precio de $25.990 CLP.</p></details>
+        <details><summary>¿La capucha se puede retirar?</summary><p>Sí. Cada modelo incluye una vista adicional que muestra la capucha separada para evidenciar su desmontabilidad.</p></details>
+        <details><summary>¿Cómo funciona la vista 360°?</summary><p>Arrastra horizontalmente la chaqueta con el mouse o con el dedo. También puedes usar las flechas ubicadas debajo del visor.</p></details>
         <details><summary>¿Cómo se elige el número de WhatsApp?</summary><p>Antes de enviar el pedido, seleccionas retiro o zona de despacho. La página abre automáticamente el contacto correspondiente.</p></details>
       </div>
     </section>
@@ -152,7 +187,7 @@
       <button class="dialog-close" id="dialog-close" type="button" aria-label="Cerrar">×</button>
       <p class="eyebrow dark">Último paso</p>
       <h2>¿Cómo recibirás tu chaqueta?</h2>
-      <p class="dialog-copy">Selecciona una alternativa. Abriremos el WhatsApp correspondiente con tu color, talla, cantidad y tipo de entrega.</p>
+      <p class="dialog-copy">Selecciona una alternativa. Abriremos el WhatsApp correspondiente con tu modelo, talla, cantidad, precio y tipo de entrega.</p>
       <div class="delivery-options">
         <button type="button" data-delivery="Retiro dentro de Santiago" data-zone="santiago"><span>📍</span><strong>Retiro en Santiago</strong><small>Coordinar punto y horario</small></button>
         <button type="button" data-delivery="Despacho dentro de Santiago" data-zone="santiago"><span>🚚</span><strong>Despacho en Santiago</strong><small>Comunas dentro de Santiago</small></button>
