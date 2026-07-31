@@ -3,22 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Chaquetas térmicas LOWY a $25.990 con visor 3D interactivo en 360°, capucha desmontable y compra por WhatsApp." />
-  <meta name="theme-color" content="#061421" />
-  <title>LOWY Outerwear — Chaquetas 3D en 360°</title>
+  <meta name="description" content="Chaquetas térmicas LOWY a $25.990, presentadas con imágenes flotantes y fotografías reales. Compra directa por WhatsApp." />
+  <meta name="theme-color" content="#071522" />
+  <title>LOWY Outerwear — Chaquetas de invierno</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
-      }
-    }
-  </script>
 </head>
 <body>
   <div class="announcement">TODOS LOS MODELOS A $25.990 · PAGO AL RECIBIR · RETIRO Y DESPACHOS EN CHILE</div>
@@ -29,8 +21,9 @@
       <span><strong>LOWY</strong><small>OUTERWEAR</small></span>
     </a>
     <nav aria-label="Navegación principal">
-      <a href="#modelos">Colores</a>
-      <a href="#producto">Visor 3D</a>
+      <a href="#modelos">Modelos</a>
+      <a href="#producto">Producto</a>
+      <a href="#fotos-reales">Fotos reales</a>
       <a href="#entregas">Entregas</a>
     </nav>
     <a class="header-cta" href="#modelos">Ver colección</a>
@@ -40,15 +33,15 @@
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow">Colección invierno</p>
-        <h1>Gírala.<br /><em>Revísala.</em><br />Elígela.</h1>
-        <p>Explora cada chaqueta como un objeto 3D: arrastra para verla de frente, de lado y por detrás. La marca aparece únicamente en la parte delantera.</p>
+        <h1>Abrigo para<br /><em>días fríos.</em></h1>
+        <p>Elige entre ocho modelos. Cada chaqueta se presenta como una reconstrucción flotante de estilo 3D y también puedes revisar las fotografías reales enviadas.</p>
         <div class="hero-actions">
-          <a class="primary-button" href="#producto">Abrir visor 3D</a>
-          <a class="secondary-button" href="#modelos">Ver colores</a>
+          <a class="primary-button" href="#modelos">Ver modelos</a>
+          <a class="secondary-button" href="#fotos-reales">Ver fotos reales</a>
         </div>
         <div class="hero-points">
-          <span>360° interactivo</span>
           <span>Capucha desmontable</span>
+          <span>8 modelos</span>
           <span>$25.990</span>
         </div>
       </div>
@@ -59,7 +52,7 @@
         <div class="mountain middle"></div>
         <div class="mountain front"></div>
         <div class="snow-line"></div>
-        <span class="scene-label">LOWY · OUTERWEAR 3D</span>
+        <span class="scene-label">LOWY · WINTER COLLECTION</span>
       </div>
     </section>
 
@@ -67,70 +60,47 @@
       <div class="section-heading">
         <div>
           <p class="eyebrow dark">Colores y diseños</p>
-          <h2>Elige tu modelo</h2>
+          <h2>Elige tu chaqueta</h2>
         </div>
-        <p>Cada opción carga su propio acabado en el visor 3D. Los estampados también pueden girarse completamente.</p>
+        <p>Selecciona un modelo para verlo en grande. La reconstrucción conserva el diseño frontal y muestra la capucha desmontable por separado.</p>
       </div>
       <div class="model-grid" id="model-grid" aria-live="polite"></div>
     </section>
 
     <section class="product-section" id="producto">
-      <div class="viewer-column">
-        <div class="viewer-heading">
+      <div class="product-stage">
+        <div class="stage-header">
           <div>
-            <p class="eyebrow dark">Modelo 3D interactivo</p>
-            <h2 id="viewer-model-title">Cumbre Celeste</h2>
+            <p class="eyebrow dark">Presentación flotante</p>
+            <h2 id="stage-model-title">Cumbre Celeste</h2>
           </div>
-          <span class="viewer-price">$25.990</span>
+          <span>$25.990</span>
         </div>
-
-        <div class="viewer-shell">
-          <div class="viewer-toolbar">
-            <span class="live-indicator"><i></i> 3D activo</span>
-            <div>
-              <button type="button" id="auto-rotate" aria-pressed="false">Giro automático</button>
-              <button type="button" id="reset-view">Volver al frente</button>
-            </div>
-          </div>
-          <div class="product-viewer" id="product-viewer" aria-label="Visor 3D rotativo de la chaqueta">
-            <canvas id="product-canvas"></canvas>
-            <div class="viewer-hint" id="viewer-hint">
-              <span>↔</span>
-              <strong>Arrastra para girar 360°</strong>
-              <small>También puedes acercar con la rueda o pellizcar</small>
-            </div>
-            <div class="loading-state" id="loading-state">Preparando modelo 3D…</div>
-          </div>
-          <p class="viewer-note">La marca está ubicada únicamente en el panel delantero. La espalda y los costados no tienen logotipo.</p>
+        <div class="floating-product">
+          <div class="ice-orbit one"></div>
+          <div class="ice-orbit two"></div>
+          <div id="main-product-image" class="main-product-sprite" role="img" aria-label="Chaqueta Cumbre Celeste con capucha desmontable"></div>
+          <div class="product-shadow"></div>
+          <div class="floating-label"><strong>EFECTO 3D</strong><small>Presentación flotante no rotativa</small></div>
         </div>
+        <p class="reconstruction-note">Imagen reconstruida para presentación comercial. Revisa las fotografías reales más abajo para observar el producto original.</p>
       </div>
 
       <aside class="product-info">
         <p class="eyebrow dark">Modelo seleccionado</p>
         <h2 id="selected-model-title">Cumbre Celeste</h2>
         <div class="price-line"><strong>$25.990</strong><span>CLP</span></div>
-        <p class="description" id="selected-model-description">Chaqueta bicolor celeste y negra, con acolchado térmico y estilo outdoor.</p>
-
-        <div class="hood-preview-card">
-          <div class="hood-preview-copy">
-            <span>Vista 3D fija</span>
-            <strong>Capucha desmontable</strong>
-            <small>Se muestra separada para evidenciar el sistema removible.</small>
-          </div>
-          <div class="hood-canvas-wrap" aria-label="Vista 3D fija de la capucha desmontable">
-            <canvas id="hood-canvas"></canvas>
-          </div>
-        </div>
+        <p class="description" id="selected-model-description">Chaqueta bicolor celeste y negra, acolchada y con capucha desmontable.</p>
 
         <div class="feature-list">
-          <span>✓ Interior térmico</span>
+          <span>✓ Diseño acolchado</span>
           <span>✓ Capucha desmontable</span>
           <span>✓ Bolsillos laterales</span>
           <span>✓ Ajuste en puños</span>
         </div>
 
         <div class="option-block">
-          <div class="option-title"><span>Diseño</span><strong id="selected-model-name">Cumbre Celeste</strong></div>
+          <div class="option-title"><span>Modelo</span><strong id="selected-model-name">Cumbre Celeste</strong></div>
           <div class="model-options" id="model-options"></div>
         </div>
 
@@ -155,6 +125,17 @@
         </div>
         <p class="secure-note">🔒 El contacto se selecciona automáticamente según retiro o zona de despacho.</p>
       </aside>
+    </section>
+
+    <section class="real-photos-section" id="fotos-reales">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow dark">Fotografías originales</p>
+          <h2>Fotos reales del producto</h2>
+        </div>
+        <p>Estas son las fotografías recibidas del producto. Puedes abrir cada una para revisarla en mayor tamaño.</p>
+      </div>
+      <div class="real-photo-grid" id="real-photo-grid"></div>
     </section>
 
     <section class="delivery-section" id="entregas">
@@ -195,6 +176,11 @@
     </div>
   </dialog>
 
-  <script type="module" src="script.js"></script>
+  <dialog class="photo-dialog" id="photo-dialog">
+    <button class="photo-close" id="photo-close" type="button" aria-label="Cerrar foto">×</button>
+    <div id="photo-dialog-image" class="photo-dialog-sprite" role="img" aria-label="Fotografía real ampliada"></div>
+  </dialog>
+
+  <script src="script.js"></script>
 </body>
 </html>
