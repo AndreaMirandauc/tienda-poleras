@@ -1,339 +1,291 @@
-const WHATSAPP_NUMBER = "56966690359";
+const FRAME_COUNT = 8;
+const PHONES = {
+  santiago: "56966690359",
+  regiones: "56961179420",
+};
 
-const PRODUCTS = [
-  {
-    id: "polera-essential",
-    name: "Polera Essential",
-    category: "Poleras",
-    description: "Polera cómoda de calce relajado, cuello redondo y estilo versátil para todos los días.",
-    price: 4000,
-    stock: 12,
-    sizes: ["S", "M", "L", "XL"],
-    colors: [
-      { name: "Negro", hex: "#1d1d1a" },
-      { name: "Blanco", hex: "#ebe8df" },
-      { name: "Beige", hex: "#b89568" },
-    ],
-    art: "shirt",
-    garmentLight: "#30302d",
-    garmentDark: "#11110f",
-    background: "#f1ebdf",
-    accent: "#f26a38",
-    badge: "Precio lanzamiento",
-  },
-  {
-    id: "pantalon-urban",
-    name: "Pantalón Urban",
-    category: "Pantalones",
-    description: "Pantalón de calce relajado y diseño urbano, pensado para combinar comodidad y estilo.",
-    price: 9990,
-    stock: 10,
-    sizes: ["S", "M", "L", "XL"],
-    colors: [
-      { name: "Negro", hex: "#20201e" },
-      { name: "Gris", hex: "#72716c" },
-    ],
-    art: "pants",
-    garmentLight: "#3a3a37",
-    garmentDark: "#161614",
-    background: "#e8ece7",
-    accent: "#9eb5a6",
-    badge: "10 unidades",
-  },
-];
+const COLORS = {
+  celeste: { label: "Celeste", main: "#2c9fd0", light: "#6bc7ed", dark: "#1675a2" },
+  negro: { label: "Negro", main: "#252a2f", light: "#444b52", dark: "#12171b" },
+  rojo: { label: "Rojo", main: "#c32632", light: "#e14a55", dark: "#861821" },
+  crema: { label: "Crema", main: "#c6a878", light: "#e1c89e", dark: "#94764d" },
+};
 
 const state = {
-  category: "Todos",
-  search: "",
-  selectedProduct: null,
+  color: "celeste",
+  colorLabel: "Celeste",
+  size: "M",
   quantity: 1,
-  cart: loadCart(),
+  frame: 0,
+  mode: "360",
+  dragging: false,
+  startX: 0,
+  startFrame: 0,
 };
 
-const elements = {
-  productGrid: document.querySelector("#product-grid"),
-  emptyState: document.querySelector("#empty-state"),
-  filters: document.querySelector("#category-filters"),
-  search: document.querySelector("#product-search"),
-  dialog: document.querySelector("#product-dialog"),
-  dialogArt: document.querySelector("#dialog-art"),
-  dialogCategory: document.querySelector("#dialog-category"),
-  dialogName: document.querySelector("#dialog-name"),
-  dialogDescription: document.querySelector("#dialog-description"),
-  dialogPrice: document.querySelector("#dialog-price"),
-  colorOptions: document.querySelector("#color-options"),
-  sizeOptions: document.querySelector("#size-options"),
-  colorLabel: document.querySelector("#selected-color-label"),
-  productForm: document.querySelector("#product-form"),
-  quantityOutput: document.querySelector("#dialog-quantity"),
-  quantityMinus: document.querySelector("#quantity-minus"),
-  quantityPlus: document.querySelector("#quantity-plus"),
-  closeDialog: document.querySelector("#close-product-dialog"),
-  cartDrawer: document.querySelector("#cart-drawer"),
-  drawerBackdrop: document.querySelector("#drawer-backdrop"),
-  openCart: document.querySelector("#open-cart"),
-  closeCart: document.querySelector("#close-cart"),
-  continueShopping: document.querySelector("#continue-shopping"),
-  cartItems: document.querySelector("#cart-items"),
-  cartEmpty: document.querySelector("#cart-empty"),
-  cartSummary: document.querySelector("#cart-summary"),
-  cartCount: document.querySelector("#cart-count"),
-  cartTotal: document.querySelector("#cart-total"),
-  checkout: document.querySelector("#checkout-whatsapp"),
-  clearCart: document.querySelector("#clear-cart"),
-  floatingWhatsapp: document.querySelector("#floating-whatsapp"),
-  toast: document.querySelector("#toast"),
-};
+const viewer = document.querySelector("#product-viewer");
+const image = document.querySelector("#product-image");
+const hint = document.querySelector("#viewer-hint");
+const dots = document.querySelector("#frame-dots");
+const angleLabel = document.querySelector("#angle-label");
+const controls = document.querySelector("#viewer-controls");
+const tab360 = document.querySelector("#tab-360");
+const tabHood = document.querySelector("#tab-hood");
+const selectedColorName = document.querySelector("#selected-color-name");
+const selectedSizeName = document.querySelector("#selected-size-name");
+const quantityOutput = document.querySelector("#quantity");
+const dialog = document.querySelector("#delivery-dialog");
 
-function formatPrice(value) {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    maximumFractionDigits: 0,
-  }).format(value);
+function brandMarkup(opacity = 1) {
+  return `
+    <g opacity="${opacity}" transform="translate(416 242)">
+      <text x="0" y="0" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="800">THE</text>
+      <text x="0" y="14" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="800">NORTH</text>
+      <text x="0" y="28" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="800">FACE</text>
+      <path d="M52 28a28 28 0 0 0-28-28v8a20 20 0 0 1 20 20Z" fill="#fff"/>
+      <path d="M42 28A18 18 0 0 0 24 10v7a11 11 0 0 1 11 11Z" fill="#fff" opacity=".92"/>
+    </g>`;
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+function defsMarkup(c) {
+  return `
+    <defs>
+      <linearGradient id="body" x1="0" x2="1" y1="0" y2="1">
+        <stop offset="0" stop-color="${c.light}"/>
+        <stop offset=".48" stop-color="${c.main}"/>
+        <stop offset="1" stop-color="${c.dark}"/>
+      </linearGradient>
+      <linearGradient id="black" x1="0" x2="1" y1="0" y2="1">
+        <stop offset="0" stop-color="#343a40"/>
+        <stop offset="1" stop-color="#11161b"/>
+      </linearGradient>
+      <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+        <feDropShadow dx="0" dy="24" stdDeviation="18" flood-color="#0b1c2b" flood-opacity=".24"/>
+      </filter>
+      <filter id="soft"><feGaussianBlur stdDeviation="8"/></filter>
+      <pattern id="fabric" width="12" height="12" patternUnits="userSpaceOnUse">
+        <path d="M0 12 12 0M-4 4 4-4M8 16 16 8" stroke="#fff" stroke-opacity=".035" stroke-width="1"/>
+      </pattern>
+    </defs>`;
 }
 
-function loadCart() {
-  try {
-    const saved = JSON.parse(localStorage.getItem("lowy-cart"));
-    return Array.isArray(saved) ? saved : [];
-  } catch {
-    return [];
+function mountainBackdrop() {
+  return `
+    <path d="M0 565 110 410l78 90 115-190 92 135 96-165 229 285Z" fill="#b9d8e8" opacity=".42"/>
+    <path d="M0 620 120 500l96 70 135-170 110 115 104-128 155 233Z" fill="#6e9bb4" opacity=".28"/>
+    <ellipse cx="360" cy="615" rx="225" ry="30" fill="#50697a" opacity=".18" filter="url(#soft)"/>`;
+}
+
+function frontJacket(c, detached = false) {
+  const shift = detached ? -72 : 0;
+  const scale = detached ? .87 : 1;
+  const hood = detached ? "" : `
+    <path d="M278 190c8-73 42-111 82-111s74 38 82 111l-37 22c-11-45-25-66-45-66s-34 21-45 66Z" fill="url(#black)" stroke="#0a1117" stroke-width="3"/>
+    <path d="M304 187c10-39 28-59 56-59s46 20 56 59" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="5"/>`;
+  return `
+    <g transform="translate(${shift} 0) scale(${scale})" transform-origin="360px 350px" filter="url(#shadow)">
+      ${hood}
+      <path d="M260 178c30-17 65-26 100-26s70 9 100 26l70 50-48 104-52-35v278c0 18-14 32-32 32H322c-18 0-32-14-32-32V297l-52 35-48-104Z" fill="url(#body)" stroke="${c.dark}" stroke-width="3"/>
+      <path d="M260 178c30-17 65-26 100-26s70 9 100 26l37 27-23 89H246l-23-89Z" fill="url(#black)"/>
+      <path d="M360 154v452" stroke="#0a1117" stroke-width="8"/>
+      <path d="M364 160v440" stroke="#fff" stroke-opacity=".12" stroke-width="2"/>
+      <path d="M274 300h172M286 382h148M290 469h140" stroke="#101820" stroke-opacity=".24" stroke-width="3"/>
+      <path d="M295 435 326 413v89l-31 18Zm130 0-31-22v89l31 18Z" fill="none" stroke="#111820" stroke-opacity=".62" stroke-width="4"/>
+      <path d="M260 178c30-17 65-26 100-26s70 9 100 26l70 50-48 104-52-35v278c0 18-14 32-32 32H322c-18 0-32-14-32-32V297l-52 35-48-104Z" fill="url(#fabric)"/>
+      ${brandMarkup()}
+    </g>`;
+}
+
+function detachedHoodMarkup(c) {
+  return `
+    <g transform="translate(520 105) rotate(8)" filter="url(#shadow)">
+      <path d="M0 75c12-63 42-91 83-91 45 0 78 35 91 100l-18 102c-52 16-101 10-142-17Z" fill="url(#body)" stroke="${c.dark}" stroke-width="3"/>
+      <path d="M24 73c15-37 36-54 63-54 29 0 51 20 65 60l-11 70c-39 8-76 4-108-13Z" fill="url(#black)"/>
+      <circle cx="19" cy="166" r="6" fill="#111820"/><circle cx="145" cy="179" r="6" fill="#111820"/>
+      <path d="M20 164h-20m146 15h23" stroke="#111820" stroke-width="4"/>
+      <path d="M0 75c12-63 42-91 83-91 45 0 78 35 91 100l-18 102c-52 16-101 10-142-17Z" fill="url(#fabric)"/>
+    </g>`;
+}
+
+function rotatingJacket(c, frame) {
+  const angle = frame * 45;
+  const rad = angle * Math.PI / 180;
+  const frontFactor = Math.max(0, Math.cos(rad));
+  const backFactor = Math.max(0, -Math.cos(rad));
+  const side = Math.abs(Math.sin(rad));
+  const widthScale = .28 + .72 * Math.abs(Math.cos(rad));
+  const lean = Math.sin(rad) * 28;
+  const sleeveNear = 1 + side * .14;
+  const sleeveFar = 1 - side * .18;
+  const front = frontFactor >= backFactor;
+  const logoOpacity = frontFactor > .2 ? Math.min(1, frontFactor * 1.35) : 0;
+  const zipperOpacity = front ? frontFactor : 0;
+  const backSeamOpacity = front ? 0 : backFactor;
+
+  return `
+    <g filter="url(#shadow)" transform="translate(${lean} 0)">
+      <g transform="translate(360 0) scale(${widthScale} 1) translate(-360 0)">
+        <path d="M278 190c8-73 42-111 82-111s74 38 82 111l-37 22c-11-45-25-66-45-66s-34 21-45 66Z" fill="url(#black)" stroke="#0a1117" stroke-width="3"/>
+        <path d="M260 178c30-17 65-26 100-26s70 9 100 26l70 50-48 104-52-35v278c0 18-14 32-32 32H322c-18 0-32-14-32-32V297l-52 35-48-104Z" fill="url(#body)" stroke="${c.dark}" stroke-width="3"/>
+        <path d="M260 178c30-17 65-26 100-26s70 9 100 26l37 27-23 89H246l-23-89Z" fill="url(#black)"/>
+        <path d="M274 300h172M286 382h148M290 469h140" stroke="#101820" stroke-opacity=".24" stroke-width="3"/>
+        <path d="M360 154v452" stroke="#0a1117" stroke-width="8" opacity="${zipperOpacity}"/>
+        <path d="M360 174v404" stroke="#fff" stroke-opacity="${.18 * backSeamOpacity}" stroke-width="4"/>
+        <g opacity="${zipperOpacity}"><path d="M295 435 326 413v89l-31 18Zm130 0-31-22v89l31 18Z" fill="none" stroke="#111820" stroke-opacity=".62" stroke-width="4"/></g>
+        <path d="M260 178c30-17 65-26 100-26s70 9 100 26l70 50-48 104-52-35v278c0 18-14 32-32 32H322c-18 0-32-14-32-32V297l-52 35-48-104Z" fill="url(#fabric)"/>
+        ${logoOpacity ? brandMarkup(logoOpacity) : ""}
+      </g>
+      <path d="M205 225c-44 40-75 106-82 208l58 15 65-160Z" fill="url(#body)" opacity="${sleeveFar}"/>
+      <path d="M515 225c44 40 75 106 82 208l-58 15-65-160Z" fill="url(#body)" opacity="${sleeveNear}"/>
+    </g>`;
+}
+
+function jacketSvg(frame, colorKey, detached = false) {
+  const c = COLORS[colorKey];
+  const content = detached
+    ? `${frontJacket(c, true)}${detachedHoodMarkup(c)}`
+    : rotatingJacket(c, frame);
+  return `
+    <svg viewBox="0 0 720 720" xmlns="http://www.w3.org/2000/svg" role="presentation">
+      ${defsMarkup(c)}
+      ${mountainBackdrop()}
+      ${content}
+    </svg>`;
+}
+
+function renderDots() {
+  dots.innerHTML = Array.from({ length: FRAME_COUNT }, (_, index) =>
+    `<i class="${index === state.frame ? "is-active" : ""}"></i>`
+  ).join("");
+}
+
+function renderViewer() {
+  if (state.mode === "hood") {
+    image.innerHTML = jacketSvg(0, state.color, true);
+    image.setAttribute("aria-label", `Chaqueta ${state.colorLabel} con capucha desmontable mostrada por separado`);
+    hint.classList.add("is-hidden");
+    controls.hidden = true;
+    dots.hidden = true;
+    return;
   }
+
+  image.innerHTML = jacketSvg(state.frame, state.color, false);
+  image.setAttribute("aria-label", `Chaqueta ${state.colorLabel}, vista ${Math.round(state.frame * 360 / FRAME_COUNT)} grados`);
+  angleLabel.textContent = `${Math.round(state.frame * 360 / FRAME_COUNT)}°`;
+  controls.hidden = false;
+  dots.hidden = false;
+  renderDots();
 }
 
-function saveCart() {
-  localStorage.setItem("lowy-cart", JSON.stringify(state.cart));
+function setFrame(nextFrame) {
+  state.frame = ((nextFrame % FRAME_COUNT) + FRAME_COUNT) % FRAME_COUNT;
+  renderViewer();
 }
 
-function artMarkup(product) {
-  const style = `--garment-light:${product.garmentLight};--garment-dark:${product.garmentDark};`;
-  return `<div class="product-art art-${product.art}" style="${style}" aria-hidden="true"></div>`;
+function setMode(mode) {
+  state.mode = mode;
+  const is360 = mode === "360";
+  tab360.classList.toggle("is-active", is360);
+  tabHood.classList.toggle("is-active", !is360);
+  tab360.setAttribute("aria-selected", String(is360));
+  tabHood.setAttribute("aria-selected", String(!is360));
+  renderViewer();
 }
 
-function productWhatsAppUrl(product) {
-  const message = [
-    "Hola 👋 Me interesa este producto de LOWY:",
-    "",
-    `• ${product.name}`,
-    `• Precio: ${formatPrice(product.price)}`,
-    "",
-    "¿Qué tallas y colores tienen disponibles?",
-  ].join("\n");
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+function pointerX(event) {
+  return event.touches ? event.touches[0].clientX : event.clientX;
 }
 
-function renderFilters() {
-  const categories = ["Todos", ...new Set(PRODUCTS.map((product) => product.category))];
-  elements.filters.innerHTML = categories.map((category) => `
-    <button class="filter-chip ${category === state.category ? "active" : ""}" type="button" data-category="${escapeHtml(category)}">${escapeHtml(category)}</button>
-  `).join("");
+function startDrag(event) {
+  if (state.mode !== "360") return;
+  state.dragging = true;
+  state.startX = pointerX(event);
+  state.startFrame = state.frame;
+  viewer.classList.add("is-dragging");
+  hint.classList.add("is-hidden");
 }
 
-function filteredProducts() {
-  const term = state.search.trim().toLocaleLowerCase("es");
-  return PRODUCTS.filter((product) => {
-    const matchesCategory = state.category === "Todos" || product.category === state.category;
-    const haystack = `${product.name} ${product.category} ${product.description}`.toLocaleLowerCase("es");
-    return matchesCategory && (!term || haystack.includes(term));
+function moveDrag(event) {
+  if (!state.dragging || state.mode !== "360") return;
+  const delta = pointerX(event) - state.startX;
+  const steps = Math.round(delta / 48);
+  setFrame(state.startFrame - steps);
+}
+
+function endDrag() {
+  state.dragging = false;
+  viewer.classList.remove("is-dragging");
+}
+
+viewer.addEventListener("mousedown", startDrag);
+window.addEventListener("mousemove", moveDrag);
+window.addEventListener("mouseup", endDrag);
+viewer.addEventListener("touchstart", startDrag, { passive: true });
+viewer.addEventListener("touchmove", moveDrag, { passive: true });
+viewer.addEventListener("touchend", endDrag);
+
+document.querySelector("#rotate-left").addEventListener("click", () => setFrame(state.frame - 1));
+document.querySelector("#rotate-right").addEventListener("click", () => setFrame(state.frame + 1));
+tab360.addEventListener("click", () => setMode("360"));
+tabHood.addEventListener("click", () => setMode("hood"));
+
+document.querySelectorAll("[data-color]").forEach((button) => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll("[data-color]").forEach((item) => item.classList.remove("is-active"));
+    button.classList.add("is-active");
+    state.color = button.dataset.color;
+    state.colorLabel = button.dataset.label;
+    state.frame = 0;
+    selectedColorName.textContent = state.colorLabel;
+    renderViewer();
   });
+});
+
+document.querySelectorAll("[data-size]").forEach((button) => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll("[data-size]").forEach((item) => item.classList.remove("is-active"));
+    button.classList.add("is-active");
+    state.size = button.dataset.size;
+    selectedSizeName.textContent = state.size;
+  });
+});
+
+function setQuantity(value) {
+  state.quantity = Math.min(10, Math.max(1, value));
+  quantityOutput.value = state.quantity;
+  quantityOutput.textContent = state.quantity;
 }
 
-function renderProducts() {
-  const products = filteredProducts();
-  elements.productGrid.innerHTML = products.map((product) => `
-    <article class="product-card">
-      <div class="product-visual" style="--product-bg:${product.background};--accent:${product.accent}">
-        ${product.badge ? `<span class="product-badge">${escapeHtml(product.badge)}</span>` : ""}
-        ${artMarkup(product)}
-      </div>
-      <div class="product-info-card">
-        <div class="product-meta">
-          <div><p class="product-category">${escapeHtml(product.category)}</p><h3 class="product-name">${escapeHtml(product.name)}</h3></div>
-          <p class="product-price">${formatPrice(product.price)}</p>
-        </div>
-        <p class="product-stock">● ${product.stock} unidades disponibles</p>
-        <div class="product-actions">
-          <button class="quick-view" type="button" data-product-id="${product.id}">Elegir opciones</button>
-          <a class="direct-whatsapp" href="${productWhatsAppUrl(product)}" target="_blank" rel="noopener noreferrer" aria-label="Consultar ${escapeHtml(product.name)} por WhatsApp">
-            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.04 3a12.76 12.76 0 0 0-10.9 19.4L3.34 29l6.76-1.77A12.77 12.77 0 1 0 16.04 3Zm0 23.37c-2.1 0-4.15-.56-5.94-1.62l-.42-.25-4 .99 1.06-3.87-.28-.44a10.57 10.57 0 1 1 9.58 5.19Zm5.8-7.9c-.32-.16-1.88-.92-2.17-1.03-.29-.1-.5-.16-.71.16-.21.32-.82 1.03-1 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.88-1.76-2.2-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.18.21-.32.32-.52.1-.21.05-.4-.03-.56-.08-.16-.71-1.72-.98-2.35-.25-.62-.52-.54-.71-.55h-.61c-.21 0-.55.08-.84.4-.29.31-1.11 1.08-1.11 2.64s1.14 3.07 1.29 3.28c.16.21 2.24 3.42 5.42 4.8.76.32 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.38.19-1.51-.08-.13-.29-.21-.61-.37Z" /></svg>
-          </a>
-        </div>
-      </div>
-    </article>
-  `).join("");
-  elements.emptyState.hidden = products.length > 0;
-}
+document.querySelector("#qty-down").addEventListener("click", () => setQuantity(state.quantity - 1));
+document.querySelector("#qty-up").addEventListener("click", () => setQuantity(state.quantity + 1));
+document.querySelector("#buy-button").addEventListener("click", () => dialog.showModal());
+document.querySelector("#dialog-close").addEventListener("click", () => dialog.close());
+dialog.addEventListener("click", (event) => {
+  if (event.target === dialog) dialog.close();
+});
 
-function openProduct(productId) {
-  const product = PRODUCTS.find((item) => item.id === productId);
-  if (!product) return;
-  state.selectedProduct = product;
-  state.quantity = 1;
-  elements.dialogCategory.textContent = product.category;
-  elements.dialogName.textContent = product.name;
-  elements.dialogDescription.textContent = product.description;
-  elements.dialogPrice.textContent = formatPrice(product.price);
-  elements.dialogArt.style.setProperty("--accent", product.accent);
-  elements.dialogArt.style.background = product.background;
-  elements.dialogArt.innerHTML = artMarkup(product);
-  elements.colorOptions.innerHTML = product.colors.map((color, index) => `
-    <label class="variant-option">
-      <input type="radio" name="product-color" value="${escapeHtml(color.name)}" ${index === 0 ? "checked" : ""} />
-      <span class="color-swatch" style="background:${color.hex}" title="${escapeHtml(color.name)}"></span>
-      <span class="sr-only">${escapeHtml(color.name)}</span>
-    </label>
-  `).join("");
-  elements.sizeOptions.innerHTML = product.sizes.map((size, index) => `
-    <label class="size-option"><input type="radio" name="product-size" value="${escapeHtml(size)}" ${index === 0 ? "checked" : ""} /><span>${escapeHtml(size)}</span></label>
-  `).join("");
-  elements.colorLabel.textContent = product.colors[0].name;
-  updateQuantity(1);
-  elements.dialog.showModal();
-}
-
-function updateQuantity(next) {
-  const max = state.selectedProduct?.stock ?? 1;
-  state.quantity = Math.max(1, Math.min(max, next));
-  elements.quantityOutput.value = state.quantity;
-  elements.quantityOutput.textContent = state.quantity;
-  elements.quantityMinus.disabled = state.quantity === 1;
-  elements.quantityPlus.disabled = state.quantity === max;
-}
-
-function addSelectedProduct() {
-  const product = state.selectedProduct;
-  if (!product) return;
-  const data = new FormData(elements.productForm);
-  const color = data.get("product-color");
-  const size = data.get("product-size");
-  const key = `${product.id}-${color}-${size}`;
-  const existing = state.cart.find((item) => item.key === key);
-  if (existing) {
-    existing.quantity = Math.min(product.stock, existing.quantity + state.quantity);
-  } else {
-    state.cart.push({ key, productId: product.id, name: product.name, price: product.price, color, size, quantity: state.quantity, art: product.art, garmentLight: product.garmentLight, garmentDark: product.garmentDark });
-  }
-  saveCart();
-  renderCart();
-  elements.dialog.close();
-  showToast("Producto agregado al carrito");
-}
-
-function removeItem(key) {
-  state.cart = state.cart.filter((item) => item.key !== key);
-  saveCart();
-  renderCart();
-}
-
-function checkoutUrl() {
-  const total = state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const lines = state.cart.flatMap((item, index) => [
-    `${index + 1}. ${item.name}`,
-    `   Talla: ${item.size} | Color: ${item.color}`,
-    `   Cantidad: ${item.quantity} | Subtotal: ${formatPrice(item.price * item.quantity)}`,
-  ]);
+function buildWhatsappUrl(phone, delivery) {
   const message = [
-    "Hola 👋 Quiero realizar este pedido en LOWY:",
+    "¡Hola! 👋 Me interesa comprar la chaqueta acolchada térmica:",
     "",
-    ...lines,
+    `🎨 Color: ${state.colorLabel}`,
+    `📏 Talla: ${state.size}`,
+    `🔢 Cantidad: ${state.quantity}`,
+    `🚚 Entrega: ${delivery}`,
     "",
-    `Total estimado: ${formatPrice(total)}`,
-    "",
-    "¿Me pueden confirmar el stock y coordinar la entrega?",
+    "¿Me pueden confirmar disponibilidad, precio y condiciones de entrega?",
   ].join("\n");
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
 
-function renderCart() {
-  const itemCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
-  const total = state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  elements.cartCount.textContent = itemCount;
-  elements.cartItems.innerHTML = state.cart.map((item) => `
-    <article class="cart-item">
-      <div class="cart-thumb">${artMarkup(item)}</div>
-      <div><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.color)} · Talla ${escapeHtml(item.size)} · ${item.quantity} unidad${item.quantity === 1 ? "" : "es"}</p><strong>${formatPrice(item.price * item.quantity)}</strong></div>
-      <button class="remove-item" type="button" data-remove-key="${escapeHtml(item.key)}" aria-label="Eliminar ${escapeHtml(item.name)}">×</button>
-    </article>
-  `).join("");
-  const hasItems = state.cart.length > 0;
-  elements.cartEmpty.hidden = hasItems;
-  elements.cartSummary.hidden = !hasItems;
-  elements.cartTotal.textContent = formatPrice(total);
-  elements.checkout.href = hasItems ? checkoutUrl() : "#";
-}
-
-function openCart() {
-  elements.cartDrawer.classList.add("open");
-  elements.cartDrawer.setAttribute("aria-hidden", "false");
-  elements.openCart.setAttribute("aria-expanded", "true");
-  elements.drawerBackdrop.hidden = false;
-  document.body.classList.add("drawer-open");
-  elements.closeCart.focus();
-}
-
-function closeCart() {
-  elements.cartDrawer.classList.remove("open");
-  elements.cartDrawer.setAttribute("aria-hidden", "true");
-  elements.openCart.setAttribute("aria-expanded", "false");
-  elements.drawerBackdrop.hidden = true;
-  document.body.classList.remove("drawer-open");
-}
-
-let toastTimer;
-function showToast(message) {
-  elements.toast.textContent = message;
-  elements.toast.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => elements.toast.classList.remove("show"), 2200);
-}
-
-elements.filters.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-category]");
-  if (!button) return;
-  state.category = button.dataset.category;
-  renderFilters();
-  renderProducts();
+document.querySelectorAll("[data-delivery]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const phone = PHONES[button.dataset.zone];
+    const url = buildWhatsappUrl(phone, button.dataset.delivery);
+    window.open(url, "_blank", "noopener,noreferrer");
+    dialog.close();
+  });
 });
 
-elements.search.addEventListener("input", (event) => {
-  state.search = event.target.value;
-  renderProducts();
-});
-
-elements.productGrid.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-product-id]");
-  if (button) openProduct(button.dataset.productId);
-});
-
-elements.colorOptions.addEventListener("change", (event) => {
-  if (event.target.name === "product-color") elements.colorLabel.textContent = event.target.value;
-});
-
-elements.quantityMinus.addEventListener("click", () => updateQuantity(state.quantity - 1));
-elements.quantityPlus.addEventListener("click", () => updateQuantity(state.quantity + 1));
-elements.productForm.addEventListener("submit", (event) => { event.preventDefault(); addSelectedProduct(); });
-elements.closeDialog.addEventListener("click", () => elements.dialog.close());
-elements.dialog.addEventListener("click", (event) => { if (event.target === elements.dialog) elements.dialog.close(); });
-elements.openCart.addEventListener("click", openCart);
-elements.closeCart.addEventListener("click", closeCart);
-elements.drawerBackdrop.addEventListener("click", closeCart);
-elements.continueShopping.addEventListener("click", () => { closeCart(); document.querySelector("#productos").scrollIntoView(); });
-elements.cartItems.addEventListener("click", (event) => { const button = event.target.closest("[data-remove-key]"); if (button) removeItem(button.dataset.removeKey); });
-elements.clearCart.addEventListener("click", () => { state.cart = []; saveCart(); renderCart(); });
-elements.floatingWhatsapp.addEventListener("click", () => { if (state.cart.length) openCart(); else window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hola 👋 Quisiera conocer los productos disponibles en LOWY")}`, "_blank", "noopener,noreferrer"); });
-document.addEventListener("keydown", (event) => { if (event.key === "Escape" && elements.cartDrawer.classList.contains("open")) closeCart(); });
 document.querySelector("#year").textContent = new Date().getFullYear();
-
-renderFilters();
-renderProducts();
-renderCart();
+renderViewer();
