@@ -1,5 +1,14 @@
 [
   {
+    "libro": "Wiley - Cálculo / Apuntes propios",
+    "capitulo": "Capítulo 1",
+    "ejercicio": "Capítulo 1 completo traducido",
+    "tema": "Vectores de variables aleatorias",
+    "dificultad": "Medio",
+    "archivo": "soluciones/capitulo-01-wiley-traducido.pdf",
+    "descripcion": "Capítulo 1 traducido, preparado en formato PDF para estudio. Material declarado por el autor como propio."
+  },
+  {
     "libro": "Libro de cálculo por definir",
     "capitulo": "Capítulo 1",
     "ejercicio": "Ejercicio de ejemplo 1.1 #1",
