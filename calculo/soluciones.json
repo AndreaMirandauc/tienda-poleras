@@ -1,0 +1,29 @@
+[
+  {
+    "libro": "Libro de cálculo por definir",
+    "capitulo": "Capítulo 1",
+    "ejercicio": "Ejercicio de ejemplo 1.1 #1",
+    "tema": "Funciones y modelos",
+    "dificultad": "Básico",
+    "archivo": "soluciones/ejemplo-capitulo-01-ejercicio-01.pdf",
+    "descripcion": "Ficha de ejemplo. Reemplázala por una solución propia en PDF."
+  },
+  {
+    "libro": "Libro de cálculo por definir",
+    "capitulo": "Capítulo 2",
+    "ejercicio": "Ejercicio de ejemplo 2.3 #8",
+    "tema": "Derivadas",
+    "dificultad": "Medio",
+    "archivo": "soluciones/ejemplo-capitulo-02-ejercicio-08.pdf",
+    "descripcion": "Ejemplo de cómo se vería una solución paso a paso de derivadas."
+  },
+  {
+    "libro": "Libro de cálculo por definir",
+    "capitulo": "Capítulo 5",
+    "ejercicio": "Ejercicio de ejemplo 5.2 #12",
+    "tema": "Integrales",
+    "dificultad": "Difícil",
+    "archivo": "soluciones/ejemplo-capitulo-05-ejercicio-12.pdf",
+    "descripcion": "Ejemplo para soluciones de integrales. Cambia el archivo cuando subas tu PDF."
+  }
+]
