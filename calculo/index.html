@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soluciones de Cálculo | Biblioteca de estudio</title>
+  <meta name="description" content="Biblioteca personal de soluciones de cálculo, organizada por libro, capítulo, tema y nivel." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <a class="brand" href="./" aria-label="Inicio">
+        <span class="brand-mark">∫</span>
+        <span>Soluciones Cálculo</span>
+      </a>
+      <div class="nav-links">
+        <a href="#biblioteca">Biblioteca</a>
+        <a href="#subir">Cómo subir</a>
+        <a href="#generador">Generador</a>
+      </div>
+    </nav>
+
+    <section class="hero-content">
+      <p class="eyebrow">Repositorio personal de estudio</p>
+      <h1>Sube, ordena y comparte tus soluciones de cálculo.</h1>
+      <p class="hero-text">Una página simple para guardar ejercicios resueltos por libro, capítulo y tema. Ideal para límites, derivadas, integrales, series y aplicaciones.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#biblioteca">Ver soluciones</a>
+        <a class="btn secondary" href="#subir">Aprender a subir</a>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="notice" aria-label="Aviso importante">
+      <strong>Importante:</strong> sube solo soluciones hechas por ti o material que tengas permiso de compartir. No subas el libro completo ni solucionarios oficiales copiados.
+    </section>
+
+    <section id="biblioteca" class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Biblioteca</p>
+        <h2>Soluciones disponibles</h2>
+        <p>Busca por libro, capítulo, tema, número de ejercicio o dificultad.</p>
+      </div>
+
+      <div class="toolbar">
+        <label class="search-box">
+          <span>Buscar</span>
+          <input id="searchInput" type="search" placeholder="Ej: derivadas, cap. 2, Stewart, integrales..." />
+        </label>
+        <label>
+          <span>Tema</span>
+          <select id="topicFilter">
+            <option value="todos">Todos</option>
+          </select>
+        </label>
+        <label>
+          <span>Dificultad</span>
+          <select id="levelFilter">
+            <option value="todos">Todas</option>
+            <option value="Básico">Básico</option>
+            <option value="Medio">Medio</option>
+            <option value="Difícil">Difícil</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="cards" class="cards" aria-live="polite"></div>
+      <p id="emptyState" class="empty hidden">No encontré soluciones con esos filtros.</p>
+    </section>
+
+    <section id="subir" class="section split">
+      <div>
+        <p class="eyebrow">Subir soluciones</p>
+        <h2>Cómo agregar un nuevo PDF</h2>
+        <p>Esta página funciona con GitHub Pages. Para subir una solución nueva:</p>
+        <ol class="steps">
+          <li>Entra al repositorio <strong>salecl/tienda-poleras</strong>.</li>
+          <li>Abre la carpeta <strong>calculo/soluciones/</strong>.</li>
+          <li>Sube tu PDF, por ejemplo: <code>capitulo-01-ejercicio-05.pdf</code>.</li>
+          <li>Edita <code>calculo/soluciones.json</code> y agrega una ficha con el enlace al PDF.</li>
+          <li>Guarda el cambio. GitHub Pages se actualizará solo.</li>
+        </ol>
+      </div>
+      <aside class="upload-card">
+        <h3>Estructura recomendada</h3>
+        <pre><code>calculo/
+  index.html
+  styles.css
+  app.js
+  soluciones.json
+  soluciones/
+    capitulo-01-ejercicio-05.pdf
+    capitulo-02-ejercicio-12.pdf</code></pre>
+      </aside>
+    </section>
+
+    <section id="generador" class="section generator">
+      <div class="section-heading">
+        <p class="eyebrow">Generador rápido</p>
+        <h2>Crea la ficha para pegar en <code>soluciones.json</code></h2>
+        <p>Llena los datos y copia el bloque generado.</p>
+      </div>
+
+      <form id="entryForm" class="form-grid">
+        <label>Libro
+          <input name="libro" placeholder="Ej: Cálculo de Stewart" required />
+        </label>
+        <label>Capítulo
+          <input name="capitulo" placeholder="Ej: Capítulo 2" required />
+        </label>
+        <label>Ejercicio
+          <input name="ejercicio" placeholder="Ej: 2.4 #18" required />
+        </label>
+        <label>Tema
+          <input name="tema" placeholder="Ej: Regla de la cadena" required />
+        </label>
+        <label>Dificultad
+          <select name="dificultad">
+            <option>Básico</option>
+            <option>Medio</option>
+            <option>Difícil</option>
+          </select>
+        </label>
+        <label>Archivo PDF
+          <input name="archivo" placeholder="soluciones/capitulo-02-ejercicio-18.pdf" required />
+        </label>
+        <label class="wide">Descripción corta
+          <textarea name="descripcion" placeholder="Solución paso a paso con desarrollo algebraico y explicación." rows="3"></textarea>
+        </label>
+        <button class="btn primary" type="submit">Generar ficha</button>
+      </form>
+
+      <div class="output-box">
+        <div class="output-head">
+          <h3>Ficha generada</h3>
+          <button id="copyBtn" class="btn small" type="button">Copiar</button>
+        </div>
+        <pre id="jsonOutput"><code>{
+  "libro": "Cálculo de Stewart",
+  "capitulo": "Capítulo 1",
+  "ejercicio": "1.1 #1",
+  "tema": "Funciones y modelos",
+  "dificultad": "Básico",
+  "archivo": "soluciones/capitulo-01-ejercicio-01.pdf",
+  "descripcion": "Solución paso a paso."
+}</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Hecho para estudiar cálculo de forma ordenada. Última actualización: <span id="updated"></span></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
